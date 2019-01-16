@@ -1,0 +1,6 @@
+* 文献
+
+** TODO
+[[http://xueshu.baidu.com/s?wd%3Dpaperuri%253A%25287d9c716d7be7778d470c5517d999ea19%2529&filter%3Dsc_long_sign&tn%3DSE_xueshusource_2kduw22v&sc_vurl%3Dhttp%253A%252F%252Flink.springer.com%252Fcontent%252Fpdf%252F10.1007%25252Fs40745-015-0040-1.pdf&ie%3Dutf-8&sc_us%3D14227662868908754060%0A][Xu
+D, Tian Y. A Comprehensive Survey of Clustering Algorithms{J}. Annals of
+Data Science, 2015, 2(2):165-193.]]

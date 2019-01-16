@@ -1,0 +1,8 @@
+* 资源
+
+-  [[https://blog.csdn.net/weixin_41043240/article/details/79405756][吴恩达《深度学习-卷积神经网络》4--特殊应用人脸识别和神经风格转换]]
+-  [[https://blog.csdn.net/lala_01/article/details/52623957][大规模图像检索的利器Deep――哈希算法介绍]]
+-  [[https://blog.csdn.net/chaipp0607/article/details/70158835][图像质量评估算法
+   SSIM(结构相似性)]]
+-  [[https://blog.csdn.net/haluoluo211/article/details/52769325][相似图片检测：感知哈希算法之dHash的Python实现]]
+-  [[https://blog.csdn.net/roguesir/article/details/77449682][相似图片搜索算法介绍]]

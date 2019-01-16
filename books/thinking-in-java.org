@@ -1,0 +1,96 @@
+* Operators
+
+** Relation operators
+
+java中的 ==== 操作符直接比较引用，通常使用类的 =.equals()=
+方法来进行值比较，如果需要自定义类，如果没有重定义相应的方法，默认仍然是引用比较。
+
+* Initialization & Cleanup
+
+** Constructor initialization
+
+*** Order of initialization
+
+类的初始化顺序和声明顺序相同，同时类中变量的初始化先于方法（包括构造函数）的初始化。静态变量的初始化开始于该类第一个实例的初始化（并且先于该类非static变量的初始化），如果该类还没有实例，那么第一次调用该类的static变量时会自动初始化。
+
+* Reusing Classes
+
+** The *=final=* keyword
+
+*** *=final=* data
+
+=final=
+修饰的变量如果是内建类型，则表示该变量是一个常量，如果修饰的类型是一个类，则表示的该类实例的引用是不可变的（即不可再指向其他实例）。
+
+*** *=final=* arguments
+
+=final= 如果修饰函数参数，则表示函数内该参数不能被修改。
+
+*** *=final=* methods
+
+表明该函数无法再被重载。
+
+*** *=final=* classes
+
+表明该函数无法被继承。
+
+* Polymorphism
+
+** The twist
+
+*** Method-call binding
+
+java中除开 =static= 和 =final= 关键字指定的函数，所有的函数绑定都是late
+binding。
+
+*** Pitfall: "overriding" *private* methods
+
+#+BEGIN_EXAMPLE
+
+    public class PrivateOverride {
+      private void f() {print("private f()";}
+      public static void main(String[] args) {
+        PrivateOverride po = new Derived();
+        po.f();
+      }
+    }
+
+    class Derived extends PrivateOverride {
+      public void f() {print("public f()");}
+    }
+
+    /*output:
+    private f()
+    */
+#+END_EXAMPLE
+
+* Interfaces
+
+** Extending an interface with inheritance
+
+interface之间也可以相互继承
+
+*** Name collisions when combining interfaces
+
+类继承关系之间的函数overloaded不会出问题，但是interface继承关系之间即便函数名字相同都会出现冲突。
+
+** Fields in interfaces
+
+interface中的任何变量都自动转换为static和final。
+
+* Error Handling with Exceptions
+
+** with =finally=
+
+*** Pitfall: the lost exception
+
+如果一个try块抛出了异常，进入了finally块，并且很不幸的finally块中也抛出了异常，那么上层在捕获的时候，finally块中抛出的异常会覆盖掉try块中的异常，此为“lost
+exception”。
+
+** Exception restrictions
+
+When you override a method, you can throw only the exceptions that have
+been specified in the base-class version of the method. This is a useful
+restriction, since it means that code that works with the base class
+will automatically work with any object derived from the base class,
+including exceptions.

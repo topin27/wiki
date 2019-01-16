@@ -1,0 +1,17 @@
+* DONE
+[[https://machinelearningmastery.com/gentle-introduction-concept-drift-machine-learning/][A
+Gentle Introduction to Concept Drift in Machine Learning]] blog
+
+解决concept drift的方式：
+
+1. Do Nothing；
+2. 周期性的重新训练；
+3. 周期性的更新：有些模型支持更新；
+4. 给较新的数据以更大的权重；
+5. 使用集成模型来对其中的弱模型的模型结果进行校正；
+6. 对于变化比较大（abrupt change）的情况，可以根据变化选择模型；
+7. Data Preparation
+
+* DONE
+[[http://dm.uestc.edu.cn/wp-content/uploads/seminar/20151125conecpt%2520drift.pdf][Concept
+Drift]] ppt

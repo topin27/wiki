@@ -1,0 +1,8 @@
+* Books
+
+-  Flexible Imputation of Missing Data：主要和处理缺失值相关
+-  LDA漫游指南：主要和LDA相关
+
+* websites
+
+-  [[https://yq.aliyun.com/articles/74399?spm%3Da2c4e.11153940.blogcont104707.19.60236084BfxF1P][考察数据科学家数据降维知识的40道题]]

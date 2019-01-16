@@ -1,0 +1,20 @@
+* 插件安装
+
+#+BEGIN_EXAMPLE
+    pip install jupyter_contrib_nbextensions
+    jupyter contrib nbextension install --user  
+#+END_EXAMPLE
+
+* matplotlib
+
+** 自定义图片显示大小
+
+#+BEGIN_SRC python
+    from matplotlib.pylab import rcParams
+    rcParams['figure.figsize'] = 16, 6
+#+END_SRC
+
+* 资源
+
+-  [[https://www.jianshu.com/p/dacc6acba00b][{译}27个jupyter
+   notebook小提示与技巧]]

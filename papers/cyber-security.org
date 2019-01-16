@@ -1,0 +1,804 @@
+* NTA
+
+** TODO Veeramachaneni K, Arnaldo I, Korrapati V, et al. AI2: Training a
+Big Data Machine to Defend[C]// IEEE, International Conference on Big
+Data Security on Cloud. IEEE, 2016. paper
+
+** TODO Zeng F, Chang S, Wan X. Classification for DGA-Based Malicious
+Domain Names with Deep Learning Architectures[J]. International Journal
+of Intelligent Information Systems, 2017, 6(6): 67. paper
+
+瀚思首席科学家万晓川挂名的文章。
+
+** TODO TargetVue: Visual Analysis of Anomalous User Behaviors in Online
+Communication Systems paper
+
+可视化方面做得比较好，使用的无监督离群点检测算法。
+
+** TODO Dean T, Stockdale J. Anomaly alert system for cyber threat
+detection: U.S. Patent Application 15/425,906[P]. 2017-8-10. patent
+
+** DOING Vaarandi R. Detecting anomalous network traffic in
+organizational private networks[C]// IEEE International
+Multi-Disciplinary Conference on Cognitive Methods in Situation
+Awareness and Decision Support. IEEE, 2013:285-292. paper
+
+地址：[[http://kodu.neti.ee/~risto/publications/cogsima13-web.pdf][link]]
+
+企业内网的异常网络流量监测，有点偏向于UBA。数据集来自于NetFlow采集。
+
+*** INTRODUCTION
+
+使用了NetFlow进行获取数据集，为了效率，只采样了一部分数据 (e.g., one
+packet out of 10,000 is considered)。
+
+*** A STUDY OF TRAFFIC PATTERNS IN AN ORGANIZATIONAL PRIVATE NETWORK
+
+Define the service as a tuple (IP address, port number, transport
+protocol ID), while the client of a service is defined as an IP address
+which is employed for communicating with the service.
+
+When we investigated services with few clients more closely, we
+discovered that a large part of them are specialized services which are
+not used by humans. For example, we found that about 20% of all services
+are SNMP agents which are accessed by few dedicated network management
+nodes. In addition to SNMP, a number of other protocols are extensively
+employed in the private network for system management, for
+communications between infrastructure components, etc.
+
+Another interesting phenomenon is that clients often access services
+which other clients have recently used, and seldom establish a
+connection to a rarely used service.
+
+*** ANOMALY DETECTION FOR ORGANIZATIONAL PRIVATE NETWORKS
+
+1. A. Service Detection From NetFlow Data
+
+2. B. Near-Real-Time Detection of Anomalous Network Flows
+
+3. C. Monitoring Node Behavior Changes
+
+** DOING Huang H, Alazzawi H, Brani H, et al. Network Traffic Anomaly
+Detection[J]. arXiv: Cryptography and Security, 2014. paper
+
+地址：[[https://arxiv.org/pdf/1402.0856.pdf][link]]
+
+** DONE Kim T Y, Cho S B. Web Traffic Anomaly Detection using C-LSTM
+Neural Networks[J]. Expert Systems with Applications, 2018. paper
+
+地址：[[https://reader.elsevier.com/reader/sd/90398F809019EFA00712009A39240C96CF2FD1F9C32E8F8DCA7C7F56B436A0829D40C1B12C5BC9D38E94191BB1D1EF3E][link]]
+
+从temporal和sptial两个方面来提取特征建立了一个CNN+LSTM的网络来进行监督学习。数据集使用的是Yahoo
+Webscope的数据集，由于异常流量较少，方法中使用了滑动窗口来解决数据集不平衡问题。
+
+还需要查看数据集来确定特征的提取方式。
+
+** TODO hao C, Chen Y, Liu A, et al. Abnormal Event Detection for
+Network Flooding Attacks.[J]. Journal of Information Science and
+Engineering, 2004, 20(6): 1079-1091. paper
+
+论文地址：[[http://citeseerx.ist.psu.edu/viewdoc/download?doi%3D10.1.1.665.36&rep%3Drep1&type%3Dpdf][<http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.665.36&rep=rep1&type=pdf>]]
+
+其中使用web日志来进行的分析，以图的方式进行展示，但是数据集使用的是自己采集的某个学校的数据集。
+
+** TODO Le D Q, Jeong T, Roman H E, et al. Traffic dispersion graph
+based anomaly detection[C]// DBLP, 2011:36-41. paper
+
+论文地址：[[http://mail.apnoms.org/papers/SoICT/2011/leDo.pdf]]
+
+作者有相关的ppt介绍：[[http://dpnm.postech.ac.kr/thesis/12/lequocdo/thesis_presentatation_Do.pdf]]
+
+数据集貌似是公开的数据集。
+
+** TODO Buczak A L, Guven E. A survey of data mining and machine
+learning methods for cyber security intrusion detection[J]. IEEE
+Communications Surveys & Tutorials, 2016, 18(2): 1153-1176. paper
+
+2015年的入侵检测综述性论文，缺点是太长。
+
+** TODO Conti M, Dargahi T, Dehghantanha A. Cyber Threat Intelligence:
+Challenges and Opportunities[J]. Cyber Threat Intelligence, 2018, 70: 1.
+paper
+
+网络安全相关的综述性文章。
+
+** TODO Ahmed M, Mahmood A N, Hu J. A survey of network anomaly
+detection techniques[J]. Journal of Network and Computer Applications,
+2016, 60: 19-31. paper
+
+网络异常行为检测综述性文章。
+
+** TODO Chandola V, Banerjee A, Kumar V, et al. Anomaly detection: A
+survey[J]. ACM Computing Surveys, 2009, 41(3). paper
+
+网络异常行文检测综述性文章，作者来自明尼书达大学，论文地址：[[http://delivery.acm.org/10.1145/1550000/1541882/a15-chandola.pdf?ip%3D110.185.210.154&id%3D1541882&acc%3DACTIVE%2520SERVICE&key%3DBF85BBA5741FDC6E%252E2FAE9C5FB073B473%252E4D4702B0C3E38B35%252E4D4702B0C3E38B35&__acm__%3D1526279866_aa18abf6fce3bed65ef8740b8e31d978][here]]，
+论文较长。
+
+** TODO Bartlett J. Machine Learning for Network Intrusion Detection[J].
+paper
+
+2014年斯坦福的一篇有关网络入侵检测的论文。
+
+[[http://cs229.stanford.edu/proj2014/Martina%2520Troesch,%2520Ian%2520Walsh,%2520Machine%2520Learning%2520for%2520Network%2520Intrusion%2520Detection.pdf][link]]
+
+** TODO Gao M, Wang N. A Network Intrusion Detection Method Based on
+Improved K-means Algorithm[C]// Advanced Information Technology and
+Sensor Application. 2014:429-233. paper
+
+[[http://onlinepresent.org/proceedings/vol53_2014/89.pdf][link]]
+
+** DONE Al-Jarrah O, Arafat A. Network Intrusion Detection System Using
+Neural Network Classification of Attack Behavior[C]// International
+Conference on Information and Communication Systems. IEEE, 2015:1-6.
+paper
+
+论文地址：[[https://pdfs.semanticscholar.org/2230/f6012896ce3fd3e69fdb9a0ca7df9def4729.pdf][link]]
+，使用的数据集是 DARPA
+数据集，但是对于DARPA数据集，[[https://stackoverflow.com/questions/14090121/how-to-derive-kdd99-features-from-darpa-pcap-file][这里]]
+和 [[https://www.kdnuggets.com/news/2007/n18/4i.html][这里]]
+说明了该数据集的不可靠性，主要是两点：1. 数据集是模拟环境采集的，2.
+1999年的数据集中很多特征现在已经不再有效。相对而言，[[http://www.unb.ca/cic/datasets/index.html][UNB
+ISCX Intrusion Detection Evaluation DataSet]]
+是一个更好的选择（更新）。但是同时，又有2008年的论文（
+[[http://eprints.iisc.ernet.in/26885/1/darpa.pdf][Usefulness of DARPA
+Dataset for Intrusion Detection System
+Evaluation]]）辩论DARPA数据集仍然有用。
+
+*** Introduction
+
+介绍了入侵检测系统的种类:
+
+#+BEGIN_QUOTE
+  Intrusion Detection Systems (IDSs) are used to detect attacks against
+  hosts or networks. There are two types of IDSs: Host-based Intrusion
+  Detection System (HIDS) and Network-based Intrusion Detection System.
+  HIDS protects a certain host or system, while NIDS protects a network
+  of hosts and systems.
+#+END_QUOTE
+
+研究领域常用的攻击分类：
+
+-  DOS attack
+-  User to root
+-  Remote to User
+-  Probes: In this type of attacks, the attacker tries to collect any
+   possible relevant information in the network. In this class, two
+   famous types of attacks exist: Host Sweep and Port Scan Attacks. Host
+   Sweep attacks determine the hosts that exist in the network, while
+   port scan attacks determine the available services that exist in the
+   network.
+
+*** Network Probes
+
+Any network attack consists of three stages that usually occur in
+sequence: *network probe*, *attacks activity*, and *footprint
+clearance*.
+
+Network probe的两种类型：
+
+1. Host Sweep Attacks：常用的手段有TCP ECHO, UDP ECHO, ICMP Sweep
+2. Port Scan Attacks：有以下不同的行为
+
+   -  One host-different ports
+   -  Different host-one ports
+   -  Different host-different ports
+
+*** Network intrusion detection system using attack behavior
+classification
+
+使用了TDNN（Time Delay Neural Network）来进行建模。
+
+对于Host Sweep Attack，提取了以下特征：
+
+1. 源ip
+2. 目的ip
+3. 目的端口
+4. 协议类型
+
+对于Port Scan Attack，提取了以下特征：
+
+1. 源ip
+2. 目的ip
+3. 目的端口
+4. SYN标志
+5. ACK标志
+6. FIN标志
+7. 协议类型
+
+做了两个假设：
+
+1. 在一连串的包序列流中，至少需要3个包才能检测出攻击（m=3）；
+2. 如果连续10个包中有3个包都检测出有攻击的迹象，那么可以认为发生了攻击（n=10）。
+
+** DONE Roesch M. Snort - Lightweight Intrusion Detection for
+Networks[J]. Proc.usenix System Administration Conf, 1999:229--238.
+paper
+
+一篇介绍snort工具的论文，论文的作者也是Snort的作者。
+
+*** Snort定义
+
+*Snort* is a libpcap-based [PCAP94] packet sniffer and logger that can
+be used as a lightweight network intrusion detection system (NIDS). It
+features rules based logging to perform content pattern matching and
+detect a variety of attacks and probes, such as buffer overflows
+[ALE96], stealth port scans, CGI attacks, SMB probes, and much more.
+Snort has real-time alerting capability, with alerts being sent to
+syslog, Server Message Block (SMB) ``WinPopup'' messages, or a separate
+``alert'' file. Snort is configured using command line switches and
+optional Berkeley Packet Filter [BPF93] commands.
+
+*** Snort和tcpdump的区别
+
+Snort is cosmetically similar to tcpdump [TCPD91] but is more focused on
+the security applica-tions of packet sniffing. The major feature that
+Snort has which tcpdump does not is packet payload inspec-tion. Snort
+decodes the application layer of a packet and can be given rules to
+collect traffic that has spe-cific data contained within its application
+layer. This allows Snort to detect many types of hostile activity,
+including buffer overflows, CGI scans, or any other data in the packet
+payload that can be characterized in a unique detection fingerprint.
+
+简单说来，snort区别于tcpdump是因为其不仅可以抓取包，而且可以根据规则对包分析并响应。
+
+** TODO Garcia S, Grill M, Stiborek J, et al. An empirical comparison of
+botnet detection methods[J]. Computers & Security, 2014: 100-123. paper
+
+-  论文地址：[[https://ac.els-cdn.com/S0167404814000923/1-s2.0-S0167404814000923-main.pdf?_tid=6a6ce00c-ab8c-43c6-8935-115562bf5488&acdnat=1525930636_e271add9c1a44a3d728724cc248ef32c][link]]
+-  数据集：CTU-13
+
+* 网络异常检测
+
+** DOING NETWORK ANOMALY DETECTION paper
+
+石溪大学的论文，未见有发表，但是有相应的源码：[[https://github.com/dethakur/NetworkAnomalyDetection][dethakur/NetworkAnomalyDetection]]
+，其中论文原文也在该repo中，数据集使用的是CAIDA。
+
+** DONE
+[[https://www.os3.nl/_media/2010-2011/courses/rp1/p17_report.pdf][DNS
+Anomaly Detection. HVD Heide，N Barendregt]] paper
+
+介绍了常见的集中DNS攻击时DNS包的特点。
+
+*** Methods
+
+两种方法，一种实时的，一种基于统计、离线的。
+
+1. DNS Anomaly Detection
+
+   We focus on the data send to or from TCP or UDP port 53. The very
+   first analysis method is to detect if we can find DNS data in the
+   packet. Any packet without DNS data is suspicious since we found no
+   good reason for non-DNS packets to use port 53.
+
+   Most LANs use internal mail servers or a mail server hosted by their
+   ISP to send e-mails. These mail servers will deliver the e-mails on
+   behalf of the client to the destination domain. A client PC has
+   therefore no reason to query MX records for domains. An MX query
+   could therefore indicate the client is infected with a mass-mailer
+   worm. This method will also trigger an immediate alert and further
+   checks will be skipped.
+
+   Once we identified a proper DNS query or response the data strings
+   will be checked against a pre-configured list of keywords. This
+   method is very similar to a domain blacklist but is not limited to a
+   list of known malici ous domains. This method will probably identify
+   mostly human trigger anomalo us DNS traffic, e.g. an network
+   administrator could filter all requests with the w ord ”casino” in
+   the domain.
+
+2. Blacklist
+
+3. Tunnel DNS Detection
+
+   Since DNS data is often poorly monitored and often allowed to pass
+   through the firewall, it is an ideal candidate for a covert channel.
+
+   The detection of a covert channel in DNS is based on two analys is
+   methods. The first method analyzes the packet characteristics and the
+   second method analyzes the data.
+
+   There are a few characteristics of the DNS packet that could
+   distinguish a packet used in a covert channel. If the channel is used
+   to transport reasonable amounts of data, the length of the LLD
+   (Lowest Level Domain) in the query or the size o f the response
+   record can easily be checked. The average length of the one million
+   most used domains is ten characters, where the average query length
+   of a DNS tunnel used to copy a random file is well over 30
+   characters. If this method is used in combination with timing
+   analysis, a high volume stream with large DNS packets can be
+   identified.
+
+   Anomalies in the record types of the response packets can also easily
+   be identified. The NULL record is an experimental record and should
+   not be used in production environments and as described in section
+   4.1, most client systems have no reason to query an MX record.
+
+4. Character Frequency
+
+   Domain names are strings mostly chosen by humans and should be
+   recognizable by humans. Therefore the domain names consist of one or
+   more words and therefore closely follow the natural language
+   characteristics. If the language of the users can be predicted, the
+   characteristics of the language can be compared with the domain names
+   the users system requests and an assumption can be made if the domain
+   name is generated by the system or chosen by the user.
+
+   The data hidden in DNS is often normal text and therefore follows the
+   natural language characteristics. It is however very likely the
+   adversary would compress and encrypt the data to optimize the
+   bandwidth and hide the smuggled data. The encryption will by
+   definition obfuscate the natural language characteristics and this
+   could be exploited by our detection method.
+
+   A different implementation could be the detection of anomalous domain
+   names. Botnets C&C servers often change domain names and therefore
+   use random strings. This could be detected but will be a challenge.
+   The data of a single domain is very limited and would probably not
+   contain all possible characters. If this data is stored and we can
+   analyze a number of domains, the detection could be a lot more
+   certain. The obvious trade off is the time it takes before the
+   anomaly is detected.
+
+   1. Top Domain N-gram analysis
+
+      Kenton Born and David Gustafson compared the letter frequency
+      table for the English language with a list of one million most
+      frequent used domains.
+
+      英文语境下的字母频率和DNS语境下的字母频率是不同的（不管是unigram还是bigram还是trigram）。
+
+   2. Zipflan Distribution
+
+      a more generic detection method could be created with letter
+      frequencies. The frequency tables are not similar for different
+      languages but the distribution of the frequencies over the
+      different ranks in the table are very similar.
+
+      Zipf's Law states that the frequency of a word is inversely
+      proportional to its place in the frequency table. So the most
+      frequent word will occur twice as often as the second most
+      frequent word.
+
+      This means that the letter itself is not relevant for the
+      detection method but the frequency distribution of the letters is.
+
+      If a similar graph would be made of an encrypted data channel the
+      frequency distribution would by definition be almost even and the
+      line would be a flat horizontal line. This can off-course easily
+      be detected and works for any western language.
+
+5. Fast-Flux Detection
+
+   *Fast-flux* is a technique used by cyber-criminals to hide critical
+   hosts behind an ever changing set of compromised hosts. A modified
+   DNS server is used that will return a different set of IP addresses
+   for a given domain over time. These addresses belong to compromised
+   hosts that will relay for instance HTTP (web) traffic to a server
+   hosting a malicious site. This server is sometimes called the
+   fast-flux mothership.
+
+   There are three things that should be noticed. The first obvious
+   notion is the number of records. The domain resolves to ten A records
+   which is a lot for most websites. The second notion would be the IP
+   addresses the domain resolves to. The addresses are spread over a
+   large number of address spaces. Then the Time To Live (TTL) of the
+   records is abnormally low. It has been set to 300 seconds, or five
+   minutes. This will store the results only for a short period of time
+   in the cache of the client or its caching name server. This allows
+   the fast-flux service provider to switch hosts very frequently, to
+   mitigate the fact that bots are normal client PCs which are not
+   reliable as service providers.
+
+   There is a second fast-flux technique which is increasing in
+   popularity, called double flux. A double flux service provider will
+   host the domains name servers also on the botnet, mitigating the
+   weakest link of a single flux domain. A single flux domain can be
+   shut down by shutting down its name servers. A double flux service
+   provider will regulary update the records at the domain registrar to
+   reflect the changes in its botnet.
+
+6. Time Based Analysis
+
+   One of the more abstract methods is the time based analysis method.
+   This method is designed to detect anomalies in the timing of queries.
+   By collecting the queried domains, the time they occured and the host
+   that initiated the query a number of anomalies can be detected. The
+   most interesting anomalies we examined could all indicate botnet
+   activety.
+
+   Most botnet programs are designed to periodically query a central
+   server for commands to execute. The server could instruct its bots to
+   start scanning for vulnerable systems, start sending spam e-mails or
+   download a malicious program. Botnet herders will program the domain
+   name of the server in the botnet client software, so the bots will be
+   able to locate the server. To be able to connect to the server, a bot
+   has to query the domain name and resolve its IP address.
+
+   If a group of hosts in a network have been compromised by the same
+   botnet, an analysis method could be designed to detect similar
+   queries from the same set of hosts within a timeperiod.
+
+   A different approach would be to analyse the queries over time. A
+   host querying the same domain on a regular interval could indicate a
+   bot querying the server for new commands. This method would not work
+   very well if the host has a local DNS cache that caches the query for
+   a significant period of time.
+
+   In some environments, e.g. server environments, hosts are left
+   powered on outside office hours. If these hosts are infected with a
+   botnet program the software would not stop querying the server
+   outside office hours. This could easily be detected. As with the
+   previous approach this will not work efficiently if a query is cached
+   locally.
+
+** DONE [[https://arxiv.org/ftp/arxiv/papers/1007/1007.1266.pdf][Nguyen
+H A, Choi D. Network Anomaly Detection: Flow-based or Packet-based
+Approach?{J}. arXiv: Networking and Internet Architecture, 2010.]] paper
+
+只是简单介绍了两种方式的区别，没有介绍两种方式的细节。
+
+*** Introduction
+
+A new category of netowrk security systems has appeared, specifically
+geared to solve this problem. These systems utilize what is commonly
+known as /Behavioral Anomaly Detecion/ or /Network Behavior Analysis/.
+These systems intelligently take into account the behavior of the
+network and the hosts taht are attached to that network.
+
+*** Flow-Based Anomaly Detection
+
+A flow record typically contains the IP network addresses of the two
+hosts, network ports, network protocol, amount of data that was sent as
+part of this connection, the time when the flow occurred as well as a
+few miscellaneous flags.
+
+Flow records are well suited to represent the interactions between hosts
+in a network. By analyzing exported flow records and looking for unusual
+amounts, directions, groupings and characteristics of flows, an anomaly
+detection solution can infer the presence of worms or DDoS attacks in a
+network.
+
+*** Packet-Based Anomaly Detection
+
+*** Flow-Based VS. Packet-Based
+
+1. Network Scale:
+   Packet-Based方式适用于中小企业的场景，Flow-Based适用于大数据量的场景，比如ISP等厂商；
+2. Deployment Cost
+3. Data Source:
+   Packet信息相对更加详细，Flow信息则更加的泛化、总结性质。Packet-based
+   solutions tend to build fine-grained, high-volume packet traces.
+   这样通常比较耗时，解决方式可以有random data sampling, adaptive data
+   sampling or partial data storing. low-level data only contain
+   aggregated information which are coarse-grained and low-volume data.
+4. Low-latency Anomaly Detection: Routers and switches usually export a
+   flow after there has been a certain time of inactivity, typically 5
+   to 15 seconds.
+5. Anomaly Source Trace
+6. Miscellaneous
+
+** DONE
+[[https://ac.els-cdn.com/S1084804515002891/1-s2.0-S1084804515002891-main.pdf?_tid%3Dedd4f92f-16ed-4b9e-8eaf-1e03b12cf75d&acdnat%3D1527670571_a725a4e448cc1599b54939a9de8a3fbe][Ahmed
+M, Naser Mahmood A, Hu J. A survey of network anomaly detection
+techniques{J}. Journal of Network & Computer Applications, 2016,
+60:19-31.]] paper
+
+领域的挑战：
+
+-  A lack of universally applicable anomaly detection technique; for
+   example, an intrusion detection technique in a wired network may be
+   of little use in a wireless network.
+-  Data contains noise which tends to be an actual anomaly and,
+   therefore, is difficult to segregate.
+-  A lack of publicly available labeled dataset to be used for network
+   anomaly detection.
+-  As normal behaviors are continually evolving and may not be normal
+   forever, current intrusion detection techniques may not be useful in
+   the future. A need for newer and more sophisticated techniques
+   because the intruders are already aware of the prevailing techniques.
+
+An anomaly can be categorized in the following ways:
+
+-  Point anomaly: When a particular data instance deviates from the
+   normal pattern of the dataset, it can be considered a point anomaly.
+   For a realistic example, if a persons' normal car fuel usage is five
+   litres per day but if it becomes fi fty litres in any randomday, then
+   it is a point anomaly.
+-  Contextual anomaly: When a data instance behaves anomalously in a
+   particular context, it is termed a contextual or conditional anomaly;
+   for example, expenditure on a credit card during a festive period,
+   e.g., Christmas or New Year, is usually higher than during the rest
+   of the year. Although it can be high, it may not be anomalous as high
+   expenses are contextually normal in nature. On the other hand, an
+   equally high expenditure during a non-festive month could be deemed a
+   contextual anomaly.
+-  Collective anomaly: When a collection of similar data instances
+   behave anomalously with respect to the entire dataset, the group of
+   data instances is termed a collective anomaly. For example, in a
+   humans Electro Cardiogram (ECG) output, the existence of low values
+   for a long period of time indicates an outlying phenomenon
+   corresponding to an abnormal premature contraction whereas one low
+   value by itself is not considered anomalous.
+
+Type of networks attacks:
+
+-  DoS: is a type of misuse of the rights to the resources of a network
+   or host.
+-  Probe: is used to gather information about a targeted network or host
+   and, more formally, for reconnaissance purposes. It is the first step
+   in an actual attack.
+-  User to Root (U2R)
+-  Remote to User (R2U)
+
+*** 使用分类来进行检测
+
+对于分类进行异常检测的评价：
+
+#+BEGIN_QUOTE
+  The classification based approaches rely on the normal trafficactivity
+  profile that builds the knowledge base and consider activities deviate
+  from baseline profile as anomalous. The advantage lies in their
+  capability to detect attacks which are completely novel, assuming that
+  they exhibit ample deviations from the normal profile. Additionally,
+  as normal traffic not included in the knowledge base is considered an
+  attack, there will be inadvertent false alarms. Therefore, training is
+  required for anomaly detection techniques to build a normal activity
+  profile which is time-consuming and also depends on the availability
+  of completely normal traffic datasets. In practice, it is very rare
+  and expensive to obtain attack-free traffic instances. Moreover, in
+  today's dynamic and evolving network environments, it is extremely
+  difficult to keep a normal profile up-to-date.
+#+END_QUOTE
+
+*** 使用统计理论来检测
+
+统计方式进行异常检测：
+
+1. Mixture Model:
+   每个样本都是正常样本和异常样本的加权组合，最终反映为求两者分布的问题；
+2. Signal processing technique
+3. Principal component analysis(PCA), An anomaly detection technique
+   based on PCA has the benefits of:
+
+   -  being free from any assumption of statistical distribution;
+   -  being able to reduce the dimension of the data without losing any
+      important information; and
+   -  having minimal computational complexity which supports realtime
+      anomaly detection.
+
+*** Information theory
+
+Information-theoretic measures can be used to create an appropriate
+anomaly detection model. In a paper by Lee and Xiang (2001), several
+measures, such as *entropy*, *conditional entropy*, *relative entropy*,
+*information gain* and *information cost*, are used to explain the
+characteristics of a dataset.
+
+*** Clustering-based
+
+Although there are different types of clustering techniques, we discuss
+the usefulness of regular *clustering* and *co-clustering* for network
+anomaly detection. The difference between regular clustering and
+co-clustering is the processing of rows and columns. Regular clustering
+techniques such as k-means clusters the data considering the rows of the
+dataset whereas the co-clustering considers both rows and columns of the
+dataset simultaneously to produce clusters.
+
+The three key assumptions that are always made when using clustering to
+detect anomalies are briefly discussed below:
+
+-  Assumption 1: As we can create clusters of only normal data, any
+   subsequent new data that do not fit well with existing clusters of
+   normal data are considered anomalies; for example, as density-based
+   clustering algorithms do not include noise inside clusters, noise is
+   considered anomalous.
+-  Assumption 2: When a cluster contains both normal and anomalous data,
+   it has been found that the normal data lie close to the nearest
+   clusters centroid but anomalies are far away from centroids. Under
+   this assumption,anomalous events are detected using a distance score.
+-  Assumption 3: In a clustering with clusters of various sizes, the
+   *smaller and sparser* can be considered anomalous and the thicker
+   normal. Instances belonging to clusters the sizes and/or densities
+   below a threshold are considered anomalous.
+
+#+BEGIN_HTML
+  <!-- end list -->
+#+END_HTML
+
+1. Regular clustering
+
+   The approach used by Münz et al. (2007) to anomalous data is quite
+   straightforward. They use k-means clustering to generate normal and
+   anomalous clusters. Once clustering is achieved, it is analyzed using
+   the following assumptions:
+
+   -  An instance is classified as normal, if it is closer to the normal
+      than anomalous clusters centroid and vice versa;
+   -  If the distance between an instance and centroid is larger than a
+      predefined threshold (d\_{max}), the instance is treated as an
+      anomaly; and
+   -  An instance is treated as an anomaly, if it is closer to the
+      anomalous than normal clusters centroid or if its distance to the
+      normal clusters centroid is larger than the predefined threshold.
+
+2. Co-clustering
+
+   Co-clustering can be simply considered a simultaneous clustering of
+   both rows and columns (Govaert and Nadif, 2008; Banerjee et al.,
+   2007). It can produce a set of ccolumn clusters of the original
+   columns ((C)) and a set of (r) row clusters of the original row
+   instances ((R)). Unlike other clustering algorithms, co-clustering
+   defines a clustering criterion and then optimizes it. In a nutshell,
+   it simultaneously finds the subsets of rows and columns of a data
+   matrix using a specified criterion. The benefits of co-clustering
+   over the regular clustering are the following:
+
+   1. Simultaneous grouping of both rows and columns can provide a more
+      compressed representation and it preserves information contained
+      in the original data.
+   2. Co-clustering can be considered as a dimensionality reduction
+      technique and it is suitable for creating new features.
+   3. Significant reduction in computational complexity. For example,
+      traditional k-means algorithm has the (O(mnk)) as computational
+      complexity where (m)=number of rows, (n)=number of columns and (k)
+      is the number of clusters. But in co-clustering the computational
+      complexity is (O(mkl+nkl)), here (l) is the number of column
+      clusters. Obviously (O(mnk)>>O(mkl+nkl)).
+
+** DONE
+[[https://pdfs.semanticscholar.org/27e4/08e8c7c672fd3d19392ecff2fb77193f0d2c.pdf][Jadidi
+Z, Muthukkumarasamy V, Sithirasenan E, et al. Flow-Based Anomaly
+Detection Using Neural Network Optimized with GSA Algorithm{C}.
+international conference on distributed computing systems workshops,
+2013: 76-81.]] paper
+
+对其提取的特征比较感兴趣，具体的算法内容没有看。
+
+使用flow数据，抽取的特征为：
+
+| Feature name            | Description                         |
+|-------------------------+-------------------------------------|
+| Packets/flow(P)         | Transferred packets in the flow.    |
+| Octcts/flow(O)          | Transferred octcts in the flow      |
+| Duration(D)             | Duration of the flow (in seconds)   |
+| Source port (SP)        | Source port of the flow             |
+| Destination port (DP)   | Destination port of the flow        |
+| TCP flags (TF)          | TCP flags in the flow               |
+| IP protocol (PR)        | IP protocol number of the flow      |
+
+** DONE
+[[https://link.springer.com/content/pdf/10.1007%252Fs10994-014-5473-9.pdf][Iglesias
+F, Zseby T. Analysis of network traffic features for anomaly
+detection{J}. Machine Learning, 2015, 101(1-3):59-84.]] paper
+
+只阅读了其中和特征相关的章节。
+
+其中列出了NSL-KDD提取的特征。
+
+第5节（Feature generation cost）介绍了各个特征的取舍，比较有参考意义。
+
+* 用户行为分析（UBA）
+
+** DONE
+[[https://wenku.baidu.com/view/d65bfc054a7302768e9939b1.html][连一峰,
+戴英侠, 王航. 基于模式挖掘的用户行为异常检测{J}. 计算机学报, 2002,
+25(3):325-330.]] paper
+
+数据集是“用户名/时间戳/主机IP/用户IP/命令/命令参数”的六元组。在该数据集中挖掘关联规则和序列模式，分别使用了Apriori算法和滑动窗口分割算法来完成。
+
+*** 模式挖掘
+
+序列模式挖掘领域的常见算法有AprioriAll，AprioriSome，DynamicSome等。本课题使用的序列模式挖掘算法描述如下：
+
+#+BEGIN_QUOTE
+  假设S是用户A的shell命令集(S={s\_1,...,s\_n})，其中(s\_i)代表用户执行的一条shell命令，指定滑动窗口的最大长度为MaxLen，最小支持度为MinSup。
+
+  1. 设定初始滑动窗口宽度为len=1，在S中查找支持度大于MinSup的长度为1的序列，此时相当于查找出现概率大于MinSup的shell命令集；
+  2. 递增滑动窗口宽度（len+=1），将窗口的左边界重合在(s\_1)处，得到从S中获取的长度为len的子序列(Sub\_1={s\_1,...,s\_{len}})，逐步向后移动窗口，每滑动一步，都得到一个长度为len的序列，滑动完成后，将会得到从S中获取的n-len+1个长度为n的子序列，对着n-len+1个子序列进行支持度计算，得到满足MinSup要求的长度为len的序列；
+  3. 重复第2步，知道len=MaxLen
+#+END_QUOTE
+
+其实就是找ngram模式。
+
+*** 模式比较
+
+由于关联规则和序列模式在形式上都是序列，因此模式的比较工作编程序列的比较。模式比较算法使用了3种：
+
+1. 全序列比较法：比较两个序列的相同部分和整个长度的占比；
+2. 相关函数法
+3. 递归相关函数
+
+* 数据集
+
+** CTU-13
+
+地址：[[https://mcfp.weebly.com/the-ctu-13-dataset-a-labeled-dataset-with-botnet-normal-and-background-traffic.html]]
+
+该数据集是CTU（捷克科技大学？）标注的用于检测僵尸网络的数据集。
+
+** DARPA
+
+地址：[[https://www.ll.mit.edu//ideval/data/]]
+
+对于DARPA数据集，[[https://stackoverflow.com/questions/14090121/how-to-derive-kdd99-features-from-darpa-pcap-file][这里]]
+和 [[https://www.kdnuggets.com/news/2007/n18/4i.html][这里]]
+说明了该数据集的不可靠性，主要是两点：
+
+1. 数据集是模拟环境采集的，
+2. 1999年的数据集中很多特征现在已经不再有效。
+
+但是同时，又有2008年的论文（
+[[http://eprints.iisc.ernet.in/26885/1/darpa.pdf][Usefulness of DARPA
+Dataset for Intrusion Detection System
+Evaluation]]）辩论DARPA数据集仍然有用。
+
+** KDD99
+
+地址：[[http://kdd.ics.uci.edu/databases/kddcup99/kddcup99.html]]
+
+该数据集是在DARPA98数据集上经过数据挖掘和预处理得到的，[[https://www.52ml.net/2337.html][这里]]
+有一篇关于该数据集的FAQ，Canadian Institute of
+Cybersecurity提供了一份在KDD99基础上的优化版[[http://www.unb.ca/cic/datasets/nsl.html][数据集]]
+。[[http://blog.sina.com.cn/s/blog_707b645501010btk.html][这里]]
+对数据集中的特征进行了详细的描述。
+
+** UNB ISCX Intrusion Detection Evaluation DataSet
+
+地址：http://www.unb.ca/cic/datasets/index.html
+
+由 Canadia Institute of Cybersecurity
+提供。数据集比较多样，比较关心的有IDS、Botnet、Dos和Tor相关。
+
+** Phishing Websites Data Set
+
+地址：[[https://archive.ics.uci.edu/ml/datasets/Phishing%2BWebsites#][<https://archive.ics.uci.edu/ml/datasets/Phishing+Websites#>]]
+
+钓鱼网址相关的数据集。
+
+** Yahoo Webscope
+
+地址：[[https://webscope.sandbox.yahoo.com/catalog.php?datatype%3Ds&did%3D70][S5
+- A Labeled Anomaly Detection Dataset, version 1.0(16M)]]
+
+网络异常流量检测数据集。
+
+** CAIDA
+
+地址：[[http://www.caida.org/data/passive/sipscan_dataset.xml][UCSD
+Network Telescope Dataset on the Sipscan]]
+
+网络异常流量检测数据集，github上有个检测网络异常流量的
+[[https://github.com/dethakur/NetworkAnomalyDetection][repo]]
+使用了该数据集。
+
+** HTTP DATASET CSIC 2010
+
+地址：[[http://www.isi.csic.es/dataset/]]
+
+针对web服务的样本，其中包含攻击类型有sql注入、缓冲区溢出、信息泄漏、文件包含、xss等，被广泛应用于WAF类产品的评测。
+
+** SEA
+
+地址：[[http://www.schonlau.net/]]
+
+主要用于UBA的分析，样本中包含了70多个unix系统用户的行为日志，数据集中对每个用户都采集了15000条命令。SEA数据集主要用于内部攻击检测。
+
+** ADFA-LD
+
+该数据集未找到有官方地址，只有一个github的repo：[[https://github.com/roopansh/Data-Mining-Project-CS244]]
+
+该数据集主要用于主机级的入侵检测。其中包含linux和windows，记录了系统调用数据，ADFA-LD已经将各类系统调用完成了特征化，并针对攻击类型进行了标注，各种攻击类型列举如下：
+
+| 攻击类型           | 数据量   | 标注类型   |
+|--------------------+----------+------------|
+| Training           | 833      | normal     |
+| Validation         | 4373     | normal     |
+| Hydra-FTP          | 162      | attack     |
+| Hydra-SSH          | 148      | attack     |
+| Adduser            | 91       | attack     |
+| Java-Meterpreter   | 125      | attack     |
+| Meterpreter        | 75       | attack     |
+| Webshell           | 118      | attack     |
+
+ADFA-LD的每个数据文件都记录了一段时间的系统调用顺序，每个系统调用都用数字编号。

@@ -1,0 +1,33 @@
+* word2vec
+
+进入gensim的word2vec模块训练的数据需要首先预处理好分好词，由于word2vec算法依赖于上下文，而上下文可能就是停用词，因此对于word2vec，我们不去除停用词[1]。
+
+** 训练
+
+#+BEGIN_SRC python
+    sentences = word2vec.LineSentence('/path/to/segment/corpus')
+    model = word2vec.Word2Vec(sentences, hs=1,min_count=1,window=3,size=100)
+#+END_SRC
+
+现实中的参数需要自调。
+
+** 增量训练
+
+gensim的word2vec模型支持online learning:
+
+#+BEGIN_SRC python
+    model = gensim.models.Word2Vec.load('/path/to/model')
+    model.train(more_sentences)
+#+END_SRC
+
+** 参考
+
+-  [[http://www.cnblogs.com/pinard/p/7278324.html][用gensim学习word2vec]]
+
+* doc2vec
+
+具体使用见文档。
+
+* Footnotes
+
+1. [[http://www.cnblogs.com/pinard/p/7278324.html][用gensim学习word2vec]]

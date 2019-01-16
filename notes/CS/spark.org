@@ -1,0 +1,183 @@
+--------------
+
+* 资源
+
+** [[http://spark.apachecn.org/docs/cn/2.2.0/][Spark中文文档]]
+
+Spark官方文档的中文翻译
+
+* 概览
+
+** 初始化spark
+
+初始化时设置master，其值可以为Spark、Mesos、YARN或者local，其中local表示在本地模式下运行。
+
+** RDD
+
+*** 外部数据库
+
+spark中如果读取本地的数据，必须保证其他worker节点上同路径下也有该文件，并且有访问权限。
+
+*** RDD操作
+
+两种类型的操作
+
+-  transformation：从一个RDD转换为一个新的RDD，比如map
+-  action：基于一个数据集进行运算，返回RDD，比如reduce
+
+所有的transformation都是lazy的，在执行一个需要执行的action时，才会执行数据集上所有的transformation。
+
+默认情况下，每个转换的RDD在执行action操作时都会重新计算，即使两个action操作会使用同样的RDD，这种情况下，可以使用
+=persist= 或 =cache= 方法缓存至内存。
+
+*** 闭包
+
+本地模式下仅有一个JVM，因此可以直接使用一些全局的变量，但是在集群模式下，情况变得复杂，这种情况下则尽量使用闭包。集群模式下，闭包会被序列化，并发送给每个executor。
+
+在分布式下运行时，建议使用累加器定义一些全局集合。
+
+*** 常用的transformation
+
+-  map(func)
+-  filter(func)
+-  flatMap(func)
+-  mapPartitions(func)
+-  mapPartitionsWithIndex(func)
+-  sample(withReplacement, fraction, seed)
+-  union(otherDataset)：返回原数据集和指定数据集合并后的数据集
+-  intersection(otherDataset)
+-  distinct([numTasks])
+-  groupByKey([numTasks])：操作(K,V)格式的数据集，返回(K,Iterable)格式的数据集
+-  reduceByKey(func, [numTasks])
+-  aggregateByKey(zeroValue)(seqOp, combOp,
+   [numTasks])：对(K,V)格式的数据按key进行聚合，聚合时使用给定的合并函数和一个初始值
+-  sortByKey([ascending], [numTasks])
+-  join(otherDataset,
+   [numTasks])：操作两个数据集(K,V)和(K,W)返回(K,(V,W))
+-  cogroup(otherDataset, [numTasks])
+-  cartesian(otherDataset)：操作数据集T和U，返回包含两个数据集所有元素的(T,U)数据集，即对两个RDD做笛卡尔积操作
+-  pipe(command, [envVars])：以管道方式将RDD各个分区使用shell命令处理
+-  coalesce(numPartitions)
+-  repartition(numPartitions)
+-  repartitionAndSortWithinPartitions(partitioner)
+
+*** 常用的action
+
+-  reduce(func)
+-  collect()
+-  count()
+-  first()
+-  take()
+-  takeSample(withReplacement, num, [seed])
+-  takeOrdered(n, [ordering])：返回排序后的前n个元素
+-  saveAsTextFile(path)
+-  saveAsSequenceFile(path)
+-  saveAsObjectFile(path)：将数据集中的元素以简单的java序列化到指定的路径，后续可以使用
+   =SparkContext.objectFile()= 进行加载
+-  countByKey()
+-  foreach(func)
+
+*** Shuffle操作
+
+Shuffle是spark将多个分区的数据重新分组重新分布数据的机制，该操作复杂且代价高，因为需要完成数据在executor和机器节点之间的复制工作。
+
+引起shuffle的操作有：
+
+-  =repartition= 操作，例如 =repartition= 、 =coalesce=
+-  =ByKey= 操作
+-  =join= 操作，例如 =cogroup= 、 =join=
+
+*** RDD持久化
+
+持久化后，每个节点会将本节点计算的数据块存储到内存，在该数据上的其他action将直接使用内存中的数据。缓存是迭代算法和快速的交互使用的重要工具。
+
+spark的缓存具有容错机制，如果一个缓冲的RDD的某个分区丢失了，Spark将按照原来的计算过程，自动重新计算并进行缓存。
+
+** 共享变量
+
+通常情况下，传递给spark操作的方法是在远程集群上的节点执行的，节点执行过程中使用的变量，是同一份变量的多个副本，各个副本的更新并不会传回driver程序。
+
+有两种特定类型的共享变量：广播变量、累加器。
+
+*** 广播变量
+
+广播变量将一个只读变量缓存到每个机器上，而不是给每个任务一个副本。
+
+*** 累加器
+
+累加器可以用于实现计数或者求和，只有driver程序可以读取累加器的值。
+
+累加器的更新至发生在action操作中，Spark保证每个任务只能更新累加器一次。
+
+** 参考
+
+-  [[http://www.cnblogs.com/BYRans/p/5292763.html][Spark官方文档 -
+   中文翻译]]
+
+* time window
+
+所有time window相关的api都需要一个timestamp的列。
+
+* pysaprk
+
+** pyspark中调用第三方jar
+
+[[http://aseigneurin.github.io/2016/09/01/spark-calling-scala-code-from-pyspark.html][Spark
+- Calling Scala code from PySpark]]
+
+(INVALID)
+
+#+BEGIN_EXAMPLE
+    pyspark --jars file1.jar,file2.jar
+     # and
+    ./bin/spark-submit --jars xxx.jar your_spark_script.py
+     # or
+    SPARK_CLASSPATH='/path/xxx.jar:/path/xx2.jar' your_spark_script.py
+#+END_EXAMPLE
+
+(VALID) 或者另外一种方式：
+
+#+BEGIN_EXAMPLE
+    pyspark --driver-class-path .../target/spark-kafka-source-0.2.0-SNAPSHOT.jar
+#+END_EXAMPLE
+
+调用时使用：
+
+#+BEGIN_SRC python
+    sc._jvm.com.ippontech.Hello.hello()
+#+END_SRC
+
+这种方式调用时，向其中的函数参数传入DataFrame时需要转换为jdf（ =df._jdf=
+）。
+
+** 使用list类型为Dataframe添加一列
+
+使用list创建一个dataframe，然后为每个dataframe创建一个"rownum"，以此进行合并：
+
+#+BEGIN_SRC python
+    from pyspark.sql import Row
+
+    def flatten_row(r):
+        r_ =  r.features.asDict()
+        r_.update({'row_num': r.row_num})
+        return Row(**r_)
+
+    def add_row_num(df):
+        df_row_num = df.rdd.zipWithIndex().toDF(['features', 'row_num'])
+        df_out = df_row_num.rdd.map(lambda x : flatten_row(x)).toDF()
+        return df_out
+
+    df_x4 = spark.createDataFrame([Row(**{'x4': x}) for x in [i for i in range(7)]])
+
+    df = add_row_num(df)
+    df_x4 = add_row_num(df_x4)
+    df_concat = df.join(df_x4, on='row_num').drop('row_num')
+#+END_SRC
+
+** 简单的判断条件可以不使用udf生成新列
+
+#+BEGIN_SRC python
+    pattern_df = pattern_df.select('*', F.when(F.col('NeedCorrect').isNull(), F.col('sup')).otherwise(F.col('sup') * weight).alias('CorrectSup'))
+#+END_SRC
+
+* DataFrame

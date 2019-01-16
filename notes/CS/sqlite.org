@@ -1,0 +1,54 @@
+* 简介
+
+sqlite是一个轻量级的数据库，官网形容其为“self-contained, serverless,
+zero-configuration”，这些特点已经足以明确其与传统数据库之间的区别，而且，在功能上，官网上也明确的说明了它的竞争对手并非是传统的数据库，而是`fopen()`，总之，“everybody
+loves sqlite”。
+
+* 操作
+
+简单的操作某个数据库可以直接`sqlite3
+test.db`，然后输入sql语句，查看有哪些数据表：
+
+#+BEGIN_EXAMPLE
+    sqlite3> .tables
+#+END_EXAMPLE
+
+查看数据表的结构：
+
+#+BEGIN_EXAMPLE
+    sqlite3> .schema
+#+END_EXAMPLE
+
+查看某个表的结构：
+
+#+BEGIN_EXAMPLE
+    sqlite3> .schema <table name>
+#+END_EXAMPLE
+
+查看当前数据库：
+
+#+BEGIN_EXAMPLE
+    sqlite3> .database
+#+END_EXAMPLE
+
+将查询输出到某个文件：
+
+#+BEGIN_EXAMPLE
+    sqlite3> .output <path>
+#+END_EXAMPLE
+
+可以使用`.help`来查看支持的命令。
+
+* api接口
+
+sqlite接口相对比较少，具体可以参考相应的文档，只是需注意插入数据的效率：
+
+#+BEGIN_EXAMPLE
+    直接执行（sqlite3\_exec）<开启事务执行<写同步<执行准备（sqlite3\_prepare\_v2）
+#+END_EXAMPLE
+
+* 参考
+
+-  [[http://sqlite.org/index.html][sqlite]]
+-  [[https://docs.python.org/2/library/sqlite3.html][sqlite3 --- DB-API
+   2.0 interface for SQLite databases¶]]

@@ -1,0 +1,31 @@
+* TODO
+[[http://www.cnblogs.com/pinard/p/6133937.html][集成学习之Adaboost算法原理小结]]
+blog
+
+* TODO
+[[http://math.mit.edu/~rothvoss/18.304.3PM/Presentations/1-Eric-Boosting304FinalRpdf.pdf][Boosting(Adaboost
+algorithm)-Eric Emer]] ppt
+
+MIT的关于AdaBoost的课程ppt讲义
+
+* TODO
+[[https://www.cse.buffalo.edu/~jcorso/t/CSE555/files/lecture_boosting.pdf][Boosting
+and AdaBoost - Jason Corso]] ppt
+
+* [[http://www.cis.upenn.edu/~mkearns/][kearns的个人主页]] blog
+
+宾夕法尼亚大学教授，证明boosting算法可行性的作者之一。
+
+* TODO [[https://jeremykun.com/2015/05/18/boosting-census/][Weak
+Learning, Boosting, and the AdaBoost algorithm]] blog
+
+其中似乎给出了boosting的证明。
+
+* DONE [[http://www-bcf.usc.edu/~haipengl/papers/OB_slides.pdf][Optimal
+and Adaptive Algorithms for Online Boosting]] ppt
+
+Online boosting的作者制作的原理讲述ppt。该域名下还有其他质量不错的pdf。
+
+* TODO
+[[http://www-bcf.usc.edu/~haipengl/papers/OnlineBoosting_slides.pdf][Online
+Boosting: Optimality and Adaptivity]] ppt

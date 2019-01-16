@@ -1,0 +1,296 @@
+* Another Twitter sentiment analysis with Python
+
+全文分成了多个部分：
+
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-bb5b01ebad90][Part
+   1]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-2-333514854913][Part
+   2]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-3-zipfs-law-data-visualisation-fc9eadda71e7][Part
+   3: Zipf's Law, data visualisation]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-4-count-vectorizer-b3f4944e51b5][Part
+   4: Count vectorizer, confusion matrix]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-5-50b4e87d9bdd][Part
+   5: Tfidf vectorizer, model comparison, lexical approach]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-6-doc2vec-603f11832504][Part
+   6: Doc2Vec]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-7-phrase-modeling-doc2vec-592a8a996867][Part
+   7: Phrase modeling + Doc2Vec]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-8-dimensionality-reduction-chi2-pca-c6d06fb3fcf3][Part
+   8: Dimensionality reduction: Chi2, PCA]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-9-neural-networks-with-tfidf-vectors-using-d0b4af6be6d7][Part
+   9: Neural Networks with Tfidf vectors using Keras]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-10-neural-network-with-a6441269aa3c][Part
+   10: Neural Network with Doc2Vec/Word2Vec/GloVe]]
+-  [[https://towardsdatascience.com/another-twitter-sentiment-analysis-with-python-part-11-cnn-word2vec-41f5e28eda74][Part
+   11: CNN + Word2Vec]]
+
+使用的数据来源于
+[[http://help.sentiment140.com/for-students/][Sentiment140]]。
+
+** 数据清理
+
+主要做了以下清理：
+
+-  HTML decoding；
+-  @用户清理；
+-  去除URL（使用两个正则模式： ='https?://[A-Za-z0-9./]+'= 和
+   =r'www.[^ ]+'= ）；
+-  UTF-8 BOM转换；
+-  热点话题符号（#）以及数字、标点符号去除（正则模式：
+   =re.sub("[^a-zA-Z]", " ", df.text[175])= ）
+-  否定词处理（定义一个dict，将如=can't=的词转换为=can not=）
+
+** 可视化
+
+使用wordcloud来对词的使用进行visualisation：
+
+#+BEGIN_SRC python
+    neg_tweets = my_df[my_df.target == 0]
+    neg_string = []
+    for t in neg_tweets.text:
+        neg_string.append(t)
+        neg_string = pd.Series(neg_string).str.cat(sep=' ')
+
+    from wordcloud import WordCloud
+
+    wordcloud = WordCloud(width=1600, height=800,max_font_size=200).generate(neg_string)
+    plt.figure(figsize=(12,10))
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.show()
+#+END_SRC
+
+通过词云观察后，可以对数据情感词分布有个大致的了解。
+
+Zipf's Law:
+
+#+BEGIN_QUOTE
+  Zipf's Law states that a small number of words are used all the time,
+  while the vast majority are used very rarely. There is nothing
+  surprising about this, we know that we use some of the words very
+  frequently, such as “the”, “of”, etc, and we rarely use the words like
+  “aardvark” (aardvark is an animal species native to Africa). However,
+  what's interesting is that “given some corpus of natural language
+  utterances, the frequency of any word is inversely proportional to its
+  rank in the frequency table. Thus the most frequent word will occur
+  approximately twice as often as the second most frequent word, three
+  times as often as the third most frequent word, etc.”
+#+END_QUOTE
+
+*** Tweet Tokens Visualisation
+
+通过对正负类中对应词频从高到低的排列，可以每类中词频的大致分布，当然可能包含一
+些词在每一类中的词频都较高，因此这些tokens对分类没有太大的帮助。通过使用
+=seaborn= 的 =regplot=
+以坐标轴分别为词在正负类中的词频数可以将tokens的分布可视化 出来。
+
+这里为了找出有利于区分两类的token，引入了 =pos_rate=
+，但是该值找出的值大多整体 词频较低，因此从类别内词频占比的角度引入了
+=pos_freq_pct= ：
+
+#+BEGIN_QUOTE
+  Intuitively, if a word appears more often in one class compared to
+  another, this can be a good measure of how much the word is meaningful
+  to characterise the class. In the below code I named it as ‘pos\rate',
+  and as you can see from the calculation of the code, this is defined
+  as
+  [pos\_rate=\frac{positive frequency}{positive frequency + negative frequency}]
+  Another metric is the frequency a word occurs in the class. This is
+  defined as
+  [pos\_freq\_pct=\frac{positive frequency}{\sum{positive frequency}}]
+#+END_QUOTE
+
+在求得 =pos_rate= 和 =pos_freq_pct=
+之后，由于两者的具体数值差距较大，因此需要使用
+调和平均将两者的值进行平均： [H=\frac{n}{\sum_{i=1}^{n}{\frac{1}{x_i}}}]
+由于从该值中也没有看出有效的信息，从新计算了 =pos_rate= 和
+=pos_freq_pct= 的 CDF(Cumulative Distribution Function)，从
+=pos_rate_normcdf= vs. =neg_rate_normcdf= 中得出了一些有趣的区别。
+
+由于使用 =seaborn= 无法创建出可交互的图，使用 =bokeh= 来对结果进行绘制：
+
+#+BEGIN_SRC python
+    from bokeh.plotting import figure
+    from bokeh.io import output_notebook, show
+    from bokeh.models import LinearColorMapper
+    from bokeh.models import HoverTool
+
+    output_notebook()
+    color_mapper = LinearColorMapper(palette='Inferno256', low=min(term_freq_df2.pos_normcdf_hmean), high=max(term_freq_df2.pos_normcdf_hmean))
+
+    p = figure(x_axis_label='neg_normcdf_hmean', y_axis_label='pos_normcdf_hmean')
+
+    p.circle('neg_normcdf_hmean','pos_normcdf_hmean',size=5,alpha=0.3,source=term_freq_df2,color={'field': 'pos_normcdf_hmean', 'transform': color_mapper})
+
+    hover = HoverTool(tooltips=[('token','@index')])
+    p.add_tools(hover)
+    show(p)
+#+END_SRC
+
+** 建模
+
+*** Feature Selection
+
+-  Chi2
+-  PCA
+
+example
+
+[[https://4.bp.blogspot.com/-pleL0HvLUgU/UYqpNFdd8EI/AAAAAAAAAHA/uf11u9lcq5g/s1600/PCA_1.png]]
+图片来自：
+[[https://mengnote.blogspot.com/2013/05/an-intuitive-explanation-of-pca.html][An
+intuitive explanation of PCA (Principal Component Analysis)]]
+
+*** 模型
+
+1. 传统模型
+
+   将数据集以98/1/1的比例划分为了训练集/验证集/测试集，划分的比例主要考虑数据量的
+   大小，1%的测试及验证集比例足够了。没有使用训练集/测试集+k折的方式也主要是考虑
+   到数据量（数据量较多），如果使用k折较为耗时。
+
+   /使用了两次 =train_test_split= 来划分训练集/验证集/测试集/
+
+   文章中使用的特征提取方式：
+
+   -  基线：使用Textblob自带的情感分析功能最为基线进行对比。
+   -  Bag-of-words：使用了Bag-of-words方式建立了特征，并使用LR验证停用词的影响（选
+      择LR的原因是计算速度相对较快，在确定停用词的影响后会选用其他模型）。同时还验
+      证了不同停用词之间、不同ngram之间的效果、不同特征数之间的效果。
+   -  TFIDF
+
+   最终效果是TFIDF效果较好。
+
+2. ensemble
+
+   对一系列模型进行了对比，选择了效果最好的5个模型，然后使用
+   =sklearn.ensemble.VotingClassifier= 进行ensemble。
+
+3. 基于字典的方式
+
+   #+BEGIN_QUOTE
+     In the lexical approach the definition of sentiment is based on the
+     analysis of individual words and/or phrases; emotional dictionaries
+     are often used: emotional lexical items from the dictionary are
+     searched in the text, their sentiment weights are calculated, and
+     some aggregated weight function is applied.
+   #+END_QUOTE
+
+   统计出每句话中所有的词，然后使用前面计算出的 =pos_rate_normcdf= 和
+   =neg_rate_normcdf= 计算整句的平均 =normcdf=
+   ，如果没有出现在词典中，则 *在0和1之间随机赋值作为最终结果*
+
+4. Doc2vec
+
+   对比了5中Doc2vec方式：
+
+   1. DBOW (Distributed Bag of Words)
+   2. DMC (Distributed Memory Concatenated)
+   3. DMM (Distributed Memory Mean)
+   4. DBOW + DMC
+   5. DBOW + DMM
+
+   由于Doc2vec是无监督的，因此训练时使用了所有的数据集进行训练。
+
+5. Phrase Modelling
+
+   #+BEGIN_QUOTE
+     Another thing that can be implemented with Gensim library is phrase
+     detection. It is similar to n-gram, but instead of getting all the
+     n-gram by sliding the window, it detects frequently used phrases
+     and stick them together.
+
+     This has been introduced by Mikolov et. al (2013), and it is
+     proposed to learn vector representation for phrases, which have a
+     meaning that is not a simple composition of the meanings of its
+     individual words. “This way, we can form many reasonable phrases
+     without greatly increasing the size of the vocabulary.”
+
+     Below formula expresses phrase modelling in a nutshell：
+     [\frac{count(AB)-count_{min}}{count(A)×count(B)}×N{\gt}threshold]
+     where:
+
+     -  =count_{min}= is a user-defined parameter to ensure that
+        accepted phrases occur a minimum number of times (default value
+        in Gensim's Phrases function is 5)
+     -  =threshold= is a user-defined parameter to control how strong of
+        a relationship between two tokens the model requires before
+        accepting them as a phrase (default threshold used in Gensim's
+        Phrases function is 10.0)
+   #+END_QUOTE
+
+6. ANN with TFIDF
+
+   由于一直都是LR效果较好，因此在考虑NN时首先考虑ANN，但是在训练时模型在训练集上的
+   准确率一直大于验证集上的准确率（8%的差距），因此先后尝试了以下方式优化：
+
+   -  Dropout
+   -  Shuffling：即每轮训练时将样本输入的顺序打乱；
+   -  调整Learning rate；
+   -  增加隐层的节点数；
+
+7. NN with Doc2Vec/Word2Vec/GloVe
+
+   由于在训练过程中需要不断的对比不同节点数的模型以及不同隐层数（1-3）的模型，
+   使用了 =keras.callbacks.{ModelCheckpoint, EarlyStopping}=
+   来对训练过程中的最优模
+   型进行保存，并检测验证集准确率，如果epoch5步之内不会变得更好，则停止。
+
+   #+BEGIN_SRC python
+       from keras.callbacks import ModelCheckpoint, EarlyStopping
+
+       filepath="d2v_09_best_weights.{epoch:02d}-{val_acc:.4f}.hdf5"
+       checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+       early_stop = EarlyStopping(monitor='val_acc', patience=5, mode='max') 
+       callbacks_list = [checkpoint, early_stop]
+       np.random.seed(seed)
+       model_d2v_09_es = Sequential()
+       model_d2v_09_es.add(Dense(256, activation='relu', input_dim=200))
+       model_d2v_09_es.add(Dense(256, activation='relu'))
+       model_d2v_09_es.add(Dense(256, activation='relu'))
+       model_d2v_09_es.add(Dense(1, activation='sigmoid'))
+       model_d2v_09_es.compile(optimizer='adam',
+                     loss='binary_crossentropy',
+                     metrics=['accuracy'])
+
+       model_d2v_09_es.fit(train_vecs_ugdbow_tgdmm, y_train,
+                           validation_data=(validation_vecs_ugdbow_tgdmm, y_validation), 
+       epochs=100, batch_size=32, verbose=2, callbacks=callbacks_list)
+   #+END_SRC
+
+   在Doc2Vec无法获得比LR更好的性能后，作者转向了Word2Vec，分别尝试了：
+
+   -  Word vectors extracted from Doc2Vec models (Average/Sum)
+   -  Word vectors extracted from Doc2Vec models with TFIDF weighting
+      (Average/Sum)
+   -  Word vectors extracted from Doc2Vec models with custom weighting
+      (Average/Sum)， 这其中的"Custom
+      weighting"其实就是前面计算出的=posnormcdfhmean=；
+   -  Word vectors extracted from pre-trained GloVe (Average/Sum)
+   -  Word vectors extracted from pre-trained Google News Word2Vec
+      (Average/Sum)
+   -  Separately trained Word2Vec (Average/Sum)
+   -  Separately trained Word2Vec with custom weighting (Average/Sum)
+
+8. CNN with Word2Vec
+
+   分别使用CBOW和skip-gram的Word2Vec训练，并将两者的结果拼接作为一个词的嵌入，然后
+   对语料进行Tokenize，并将Tokenize后的词列表进行 =texts_to_sequences=
+   转换，转换为
+   词的index后做padding，最后使用Word2Vec向量将词列表的index序列转换为矩阵
+   =embedding_matrix= 输入至CNN中。
+
+   对比了三种Embedding Layers：
+
+   -  "Pre-defined embedding"\\
+      =Embedding(100000, 200, weights=[embedding_matrix], input_length=45, trainable=False)=
+   -  "Embedding layer itself can learn word embeddings as the whole
+      model trains"\\
+      =Embedding(100000, 200, input_length=45)=
+   -  "Feed the pre-defined embedding but make it trainable"\\
+      =Embedding(100000, 200, weights=[embedding_matrix], input_length=45, trainable=True)=
+
+   在CNN结构中，将滑窗设置为 =embedding_matrix=
+   的宽度大小，这样相当于同时进行了常规
+   意义的ngram，最终输出的1维序列在输入至一个Dense层。

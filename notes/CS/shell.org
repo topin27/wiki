@@ -1,0 +1,138 @@
+* cheat sheet
+
+** =cat= 编辑文件
+
+编辑新文件：
+
+#+BEGIN_EXAMPLE
+    cat > some_file
+#+END_EXAMPLE
+
+** =sftp=
+
+-  连接：sftp @
+-  文件传输：
+
+   -  上传：=get -r <remote-path> <local-path>=
+   -  下载：=put -r <local-path> <remote-path>=
+
+-  命令操作时，默认是远端的环境，如果要在本地环境下执行命令，则所有命令加上前缀"l"，如=lls=
+
+** =dpkg=
+
+-  查看所有安装包：=dpkg -l=
+-  查看某个安装包所有的相关文件：=dpkg -L <package-name>=
+-  查看某个deb包内部的文件：=dpgk -c <deb-name.deb>=
+-  卸载某个包（及其配置文件）：=dpkg -P <package-name>=
+-  下載dpkg包：=apt download <package-name>=
+
+** =sed=
+
+-  替换文件的某一行：=sed -i 's/<old-pattern>/<new-pattern>/g' <filename>=
+
+** =echo=
+
+-  输出有颜色的文本：=echo -e "\\e\[1;<color-code>m<output string>\\e\[0m"=，
+   其中=color-code=31=表示红色，=color-code=32=为绿色；
+
+** =read=
+
+用于读取用户的输入。
+
+-  读入用户的输入：=read -p "Input your string: " $YOUR<sub>STRING</sub>=
+-  读入密码：=read -s -p "Password: " $YOUR<sub>PASSWORD</sub>=
+
+** =losetup=
+
+用于管理loop设备。
+
+-  将文件转换为块设备：=losetup /dev/loop0 <path-to-image>=
+-  删除loop设备：=losetup -d /dev/loop0=
+-  查看所有正在使用的loop设备：=losetup -a=
+
+** =mount=
+
+-  挂在iso：=mount <path-to-ISO> <mount-dir> -o loop=
+
+** =xargs=
+
+-  指定参数：=find . -name "**.html" | xargs -i echo {}=或者=find . -name   "**.html" | xargs -I {} echo {}=
+
+** =iptables=
+
+基本语法：
+
+-  查看规则：=iptables -nvL –line-number=
+-  添加规则：
+
+   -  添加到末尾：=iptables -A INPUT -s 192.168.1.5 -j DROP=
+   -  添加到第三行：=iptables -I INPUT 3 -s 192.168.1.5 -j DROP=
+
+-  删除规则：=iptables -D INPUT -s 192.168.1.5 -j DROP=或者=iptables -D INPUT 2=
+-  修改规则：=iptables -R INPUT 3 -j ACCEPT=
+
+Cheat Sheet：
+
+-  开放本机的80端口：=iptables -A INPUT -p tcp –dport 80 -j ACCEPT=
+
+** =alias=
+
+如果需要临时关闭alias：=unalias rm=
+
+** =basename=
+
+获取一个路径中的文件名部分，如果文件名有扩展“filename.ext”，通过
+=basename /path/to/filename.ext .ext=可以获取"filename"。
+
+** =mysql=
+
+-  备份database：=mysqldump -uxx -pxx –all-databases > databases.sql=
+-  授权：=grant select on testdb.\* to common<sub>user</sub>@'%';=
+-  撤销授权：=revoke all on **.** from dba@localhost;=
+-  查看授权：=show grants for dba@localhost;=
+
+** =iostat=
+
+检测每个硬盘的IO情况。
+
+=iostat -x 2 5=：每2秒打印一次报告，共打印5次。
+
+** =ps=
+
+-  打印出处于uninterruptible sleep状态（通常就是处于IO wait）的进程：
+
+#+BEGIN_EXAMPLE
+    for x in `seq 1 1 10`; do ps -eo state,pid,cmd | grep "^D"; echo "----"; sleep 5; done
+#+END_EXAMPLE
+
+** =lsof=
+
+-  查看进程读写状况：=lsof -p <pid>=
+
+** =pvdisplay=, =vgdisplay=, =lvdisplay=
+
+查看虚拟卷组情况。
+
+* troubleshooting
+
+** Slowness
+
+首先根据=top=中的iowait来进行排查是否是IO导致，然后再使用=iotop=
+查看哪个进程的IO较高，
+结合=lsof -p <pid>=可以查看该进程写入的文件，根据文件的位置并结合=iostat=和=pvdisplay=
+的结果来查看该文件是否在高IO的磁盘上。
+
+如果没有=iotop=命令，可以直接使用=ps=定位：
+
+#+BEGIN_EXAMPLE
+    for x in `seq 1 1 10`; do ps -eo state,pid,cmd | grep "^D"; echo "----"; sleep 5; done
+#+END_EXAMPLE
+
+提供了查看在uninterruptible sleep状态的进程（通常是由于IO），
+结合查看=/proc=系统中的信息 =cat /proc/<pid>/io=可以确定进程的IO大小，
+接下来可以结合=lsof=，=iostat=等确定进程是否 是高IO。
+
+*** 参考
+
+[[http://bencane.com/2012/08/06/troubleshooting-high-io-wait-in-linux/][Troubleshooting
+High I/O Wait in Linux]]

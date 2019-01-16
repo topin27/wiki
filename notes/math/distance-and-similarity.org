@@ -1,0 +1,30 @@
+* 距离
+
+** Earth Mover Distance (EMD)
+
+** Word Mover Distance (WMD)
+
+** 参考
+
+-  [[http://dataunion.org/11710.html][漫谈：机器学习中距离和相似性度量方法]]
+
+* 相似性
+
+** 余弦相似性
+
+** 皮尔逊相关系数
+
+皮尔逊相关系数是余弦相似度在维度值缺失的情况下的一种改进。
+[sim(x,y)=\frac{{\sum}(r_x-\bar{r_x})(r_y-\bar{r_y})}{\sqrt{\sum{(r_x-\bar{r_x})^2}}\sqrt{\sum{(r_y-\bar{r_y})^2}}}]
+即皮尔逊相关系数就是cos计算之前先进行中心化（每个元素都减去均值）。
+
+从协方差的角度来说，由于协方差是反映两个随机变量相关程度（一个变量是否跟随另一个变量同时变大或者变小），其定义为：
+[cov(X,Y)=\frac{\sum{(x_i-\bar{X})(y_i-\bar{Y})}}{n-1}]
+而皮尔逊相关系数的计算公式也可以写为：
+[\rho\_{X,Y}=corr(X,Y)=\frac{cov(X,Y)}{\sigma_X\sigma_Y}=\frac{E[(X-\mu_X)(Y-\mu_Y)]}{\sigma_X\sigma_Y}]
+即pearson相关系数是用协方差除以两个变量的标准差得到，虽然协方差能反映随机变量的
+*相关程度* ，但是无法很好的度量两个随机变量的 *关联程度* 。
+
+** 参考
+
+-  [[http://www.cnblogs.com/charlesblc/p/8336765.html][皮尔逊相关系数和余弦相似性的关系]]

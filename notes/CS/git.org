@@ -1,0 +1,5 @@
+--------------
+
+* Cheat sheet
+
+-  导出并打包：=git archive 8996b47 | gzip > ../git-1.4.0.tar.gz=

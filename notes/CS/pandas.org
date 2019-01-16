@@ -1,0 +1,104 @@
+--------------
+
+* Cheat sheet
+
+** 读取csv时将第一列作为index
+
+#+BEGIN_SRC python
+    pd.read_csv('./test.csv', index_col=0)
+#+END_SRC
+
+** 时间序列
+
+需要将一个类型为timestamp的列作为dataframe的index。
+
+创建：
+
+#+BEGIN_SRC python
+    from datetime import datetime
+
+    date_list = [datetime(2017, 2, 18), datetime(2018, 2, 18)]
+    time_s = pd.Series(np.random.randn(2), index=date_list)
+#+END_SRC
+
+*** 重采样（resample）
+
+对原样本重新处理的一个方法，分为降采样（downsampling，高频率数据聚合到低频率数据）和升采样（upsampling，将低频率数据转换到高频率）。
+
+常用采样频率：
+
+| 标记   | 含义                                    |
+|--------+-----------------------------------------|
+| H      | hourly frequency                        |
+| T      | minutely frequency                      |
+| S      | secondly frequency                      |
+| L      | milliseconds                            |
+| U      | microseconds                            |
+| N      | nanoseconds                             |
+| D      | calendar day frequency                  |
+| W      | weekly frequency                        |
+| M      | month end frequency                     |
+| Q      | quarter end frequency                   |
+| A      | year end frequency                      |
+| B      | business day frequency                  |
+| C      | custom business day frequency           |
+| BM     | business month end frequency            |
+| CBM    | custom business month end frequency     |
+| MS     | month start frequency                   |
+| BMS    | business month start frequency          |
+| CBMS   | custom business month start frequency   |
+| BQ     | business quarter end frequency          |
+| QS     | quarter start frequency                 |
+| BQS    | business quarter start frequency        |
+| BA     | business year end frequency             |
+| AS     | year start frequency                    |
+| BAS    | business year start frequency           |
+| BH     | business hour frequency                 |
+
+每个标记前可以前缀数字，表示对其后标记的次数。
+
+** 根据函数从一列创建新列（类似spark中的 =withColumn()= ）
+
+#+BEGIN_SRC python
+    df['new_column'] = df.apply(lambda row: some_foo(row), axis=1)
+#+END_SRC
+
+或者：
+
+#+BEGIN_SRC python
+    df['new_column'] = df['old_column'].apply(som_foo)
+#+END_SRC
+
+** 添加新行
+
+#+BEGIN_SRC python
+    df.loc[len(df)] = [<column_list>]
+#+END_SRC
+
+** 过滤
+
+#+BEGIN_SRC python
+    df[(df['col1'] == 1) & df['col2'] == 2]
+#+END_SRC
+
+根据list中的内容选择行
+
+#+BEGIN_SRC python
+    df[df['A'].isin([3, 6])]
+#+END_SRC
+
+** 遍历
+
+#+BEGIN_SRC python
+    for index, row in df.iterrows():
+        print row['c1'], row['c2']
+#+END_SRC
+
+** 和原始数据进行对比
+
+假设=df=是最原始的数据集，=mydf=是处理之后的数据集，处理的过程中造成了有些列为
+空，一个检查办法是：
+
+#+BEGIN_SRC python
+    df.iloc[my_df[my_df.isnull().any(axis=1)].index, :].head()
+#+END_SRC

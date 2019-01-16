@@ -1,0 +1,22 @@
+--------------
+
+* Cheat Sheet
+
+** 优先连接静态库
+
+[so上有相关的问题:][[[https://stackoverflow.com/questions/6578484/telling-gcc-directly-to-link-a-library-statically]]]
+> use -l: instead of -l. For example -l:libXYZ.a to link with libXYZ.a
+
+** 命令前缀
+
+前缀=-=表示忽略当前命令执行错误，前缀=@=表示执行时不显示当前命令
+
+** =make install=时指定路径安装
+
+=make install     DESTDIR=<path>=
+
+** 为目标添加前缀
+
+* 一些资源
+
+-  [[http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf][和我一起写Makefile]]

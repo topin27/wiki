@@ -1,0 +1,9 @@
+* 运行时的trick
+
+** 运行指定类中的主函数
+
+命令行中直接指定执行某个类中的 =main()= 函数
+
+#+BEGIN_EXAMPLE
+    java -cp xxx.jar xxx.com.xxx
+#+END_EXAMPLE

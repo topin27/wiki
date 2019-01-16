@@ -1,0 +1,156 @@
+* 文献
+
+** DONE [[https://arxiv.org/pdf/1502.02651.pdf][Beygelzimer A, Kale S,
+Luo H. Optimal and Adaptive Algorithms for Online Boosting{J}. Computer
+Science, 2015:2323-2331.]]
+
+vowpal
+wabbit中关于boosting部分实现的理论依据。其对应的[[http://www-bcf.usc.edu/~haipengl/papers/OB_slides.pdf][pdf]]
+，最终发布的[[http://www.ijcai.org/Proceedings/16/Papers/614.pdf][版本]]
+里，相对简化了很多证明。
+
+*** Introduction
+
+In contrast to the batch setting, online learning algorithms typically
+don't make any stochastic assumptions about the data they observe.
+
+A simple interpretation of this drawback is that all these algorithms
+require using (\gamma) , an unknown quantity, as a parameter. More
+importantly, this also means that the algorithm treats each weak learner
+equally and ignores the fact that some weak learners are actually doing
+better than the others.
+
+*** Setup and Assumptions
+
+For parameters (\gamma \in (0,\frac{1}{2})), (\delta \in (0,1)), and a
+constant (S>0), the learner is said to be a *weak online learner* with
+edge (\gamma) and *excess loss (S)* if, for any /T/ and for any input
+sequence of examples ((x\_t, y\_t)) for (t=1,2,...T) chosen adaptively,
+it generates predictions (\hat{y_t}) such that with probability at list
+(1-\delta),
+[\sum\_{t=1}\^{T}{1{\hat{y_t}{\ne}{y_t}}}{\le}{(\frac{1}{2}-\gamma)T+S}]
+The excess loss requirement is necessary since an online learner can't
+be expected to predict with any accuracy with too few examples.
+Essentially, the excess loss (S) yields a kind of sample complexity
+bound: the weak learner starts obtaining a distinct edge of
+(\Omega(\gamma)) over random guessing when (T\gg{\frac{S}{\gamma}}).
+
+booster（强模型）由多个弱模型（(WL\^i))组成，每个弱模型都有一定的权重（(\alpha\_t^{i)），每来一个新样本进行更新时，booster都会以(p\_t}i)的概率将新样本传递给第i个弱分类器进行更新，这里(p\_t\^i=\frac{w_t^i}{\|{w^i}\|_{\infty}})。
+
+#+BEGIN_QUOTE
+  定理1
+
+  There is a constant (\tilde{S}=2S+\tilde{O}(\frac{1}{\gamma})) such
+  that for any T, with high probability, for every weak learner (WL\^i)
+  we have
+  [{w^{i}{\cdot}{z}i}{\ge}{\gamma}{|{w\^i}|\_1}-\tilde{S}{\|{w^i}\|_{\infty}}]
+#+END_QUOTE
+
+1. Handling Importance Weights
+
+   典型的在线学习算法都可以为每个样本赋予一定的权重，因此前面的不等式可以改写为：the
+   online learner generates predictions (\hat{y_t}) such that with
+   probability at least (1-\delta),
+   [\sum/{t=1}\^{T}{{p\_t}1{\hat{y_t}{\ne}{y_t}}{\le}{(\frac{1}{2}-\gamma)\sum/{t=1}^{{T}{p\_t}+S}}]
+   因此对于这种权重问题可以简单的转换为对每个样本以概率(p\_t}i=\frac{w_t^i}{\|{w^i}\|_{\infty}})传递给每个弱分类器。因此定理1可以简化为
+   [{w^{i}{\cdot}{z}i}{\ge}{2\gamma}{|{w\^i}|\_1}-2\tilde{S}{\|{w^i}\|_{\infty}}]
+
+2. Discussion of Weak Online Learning Assumption
+
+   In the standard batch boosting case, the corresponding weak learning
+   assumption made is that there is an algorithm which, given a training
+   set of examples and an arbitrary distribution on it, generates a
+   hypothesis that has error at most (\frac{1}{2}-\gamma) on the
+   training data under the given distribution.
+
+   简单说来弱分类器的效果至少比随机猜测（准确度50%）好。这些假设可以归纳为：
+
+   1. (Richness.) Given an edge parameter
+      ({\gamma}{\in}{(0,\frac{1}{2})}), there is a set of hypothesis,
+      (\mathcal{H}), such that given any training set (possibly, a
+      multiset) of examples (U), there is some hypothesis
+      (h{\in}\mathcal{H}) with error at most (\frac{1}{2}-\gamma), i.e.
+      [{\sum\_{(x,y)\in{U}}{1{h(x){\ne}y}}{\le}{\frac{1}{2}-\gamma}{|U|}}.]
+   2. (Agnostic Learnability.) For any (\epsilon{\in}(0,1)), there is an
+      algorithm which, given any training set (possibly, a multiset) of
+      examples /U/ , can compute a nearly optimal hypothesis
+      (h\in{\mathcal{H}}), i.e.
+      [\sum/{(x,y)\in{U}}{1{h(x){\ne}y}}{\le}{\underset{{{h'}{\in}{\mathcal{H}}}}{inf}}{\sum/{(x,y){\in}{U}}{1{h'(x){\ne}y}}+{\epsilon}|U|}]
+
+   本文提出的在线弱学习器基于以上的假设，但是Agnostic
+   Learnability有所改进：There is an online learning algorithm which,
+   given any sequence of examples, (x\_t,y\_t) for
+   (t=1,2,...,T),generates predictions (\hat{y}) such that
+   [\sum/{t=1}\^{T}{1{\hat{y_t}{\ne}{y_t}}}
+   \ne \underset{h \in \mathcal{H}}{inf} \sum/{t=1}\^{T} 1{h(x\_t)
+   \ne {y_t}}+R(T)] where (R:\mathbb{N} \to \mathbb{R}\_+) is the
+   regret, a non-decreasing, subliner function of the number of
+   prediction periods /T/ .
+
+*** An Optimal Algorithm
+
+1. A Potential Based Family and Boost-By-Majority
+
+** TODO
+[[https://www.scss.tcd.ie/publications/tech-reports/reports.04/TCD-CS-2004-15.pdf][Tsymbal
+A. The problem of concept drift : definitions and related work{J}.
+Technical Report Department of Computer Science Trinity College Dublin,
+2004.]]
+
+概念偏移的定义以及相关的问题难点，论文有点老（04年的）
+
+** TODO
+[[http://svn.ucc.asn.au:8080/oxinabox/Uni%2520Notes/honours/Background%2520Reading/zliobaite2009learning.pdf][Žliobait\.
+e, E I. Learning under Concept Drift: an Overview{J}. Computer Science,
+2010.]]
+
+也是一篇偏概述性的论文。
+
+** TODO [[http://etheses.bham.ac.uk/1334/1/Minku11PhD.pdf][Minku L L.
+ONLINE ENSEMBLE LEARNING IN THE PRESENCE OF CONCEPT DRIFT{J}. University
+of Birmingham, 2011.]]
+
+伯明翰大学的毕业论文，比较长，可以就目录按图索骥挑着看。
+
+** DONE
+[[http://www.jos.org.cn//ch/reader/create_pdf.aspx?file_no%3D20011211&journal_id%3Djos][萧嵘,
+王继成, 孙正兴,等. 一种SVM增量学习算法α-ISVM{J}. 软件学报, 2001,
+12(12):1818-1824.]]
+
+论文中将SV集定义为样本中支持向量的那一部分数据集，进一步将SV集分为了两类，一类是BSV（boundary
+support
+vector），代表了所有不能被正确分类的样本量，另一类是代表的是能正确分类的样本，基于此提出了两种增量的SVM算法：
+
+1. 第一种是SISVM（Simple incremental SVM）
+2. 第二种是(\alpha)-ISVM
+
+其中第一种的流程为：
+
+1. 使用分类器(\Gamma\^1)对增量样本集B进行分类，可将B划分为测试错误集(B\_err)和测试正确集(B\_ok)；
+2. 将集合(A\_{sv}^{{1})和(B\_err)的并集(A}1)作为新的训练集，得到新的分类器(\Gamma^{2)和SV集(A\_{sv}}2)，并将集合A中除去SV集的剩余样本与集合(B\_{ok})合并在一起，微信生成的分类器(\Gamma\^2)构建新的增量样本集B；
+3. 继续多次迭代
+
+第二种则是将样本分为了内样本（从未入选过任何的SV集），边界样本（每一次都是在SV集内），和准边界样本（偶尔出现在SV集中），通过引入遗忘因子(\alpha)，在后续的迭代中去除内样本的计算，从而减少计算量。
+
+** TODO [[http://www.oalib.com/paper/4417985][侯杰, 茅耀斌, 孙金生.
+基于指数损失和0-1损失的在线Boosting算法{J}. 自动化学报,
+2014(4):635-642.]]
+
+** DONE 张文生, 于廷照. Boosting算法理论与应用研究[J].
+中国科学技术大学学报, 2016(3):222-230.
+
+各种主流boosting的算法流程介绍。
+
+** TODO [[http://www.isee.zju.edu.cn/dsec/pdf/ijcai16_586.pdf][Pi T, Li
+X, Zhang Z, et al. Self-paced boost learning for classification{C}//
+International Joint Conference on Artificial Intelligence. AAAI Press,
+2016:1932-1938.]]
+
+具有 */自学习/*
+的集成学习分类算法，[[https://zhuanlan.zhihu.com/p/28904764][这里]]
+还有一篇对其进行简单解读的blog。
+
+** TODO [[http://www-bcf.usc.edu/~haipengl/papers/thesis.pdf][Luo H.
+Optimal and Adaptive Online Learning]]
+
+online boosting的作者之一的学位论文。

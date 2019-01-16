@@ -1,0 +1,10 @@
+* resources
+
+** python包
+
+-  =scipy.optimize.linprog= 中提供了和线性规划相关的工具。
+
+** 学习资源
+
+-  [[https://www.math.ucla.edu/~tom/LP.pdf][LINEAR
+   PROGRAMMING]]，UCLA的教材。

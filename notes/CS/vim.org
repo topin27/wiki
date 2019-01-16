@@ -1,0 +1,28 @@
+--------------
+
+* Cheat Sheet
+
+** 粘帖时出现混乱的缩进
+
+临时打开粘帖模式：
+
+#+BEGIN_EXAMPLE
+    :set paste
+#+END_EXAMPLE
+
+打开该模式后，自动缩进会失效，因此完成后需：
+
+#+BEGIN_EXAMPLE
+    :set nopaste
+    :set ai
+#+END_EXAMPLE
+
+** 在最近访问的两个文件之间跳转
+
+使用 =Ctrl-^= 即所谓的 =Ctrl-6=
+
+** vimdiff
+
+-  折叠：=zo=打开折叠，=zc=关闭折叠；
+-  不同处跳转：=]c=跳转至下一不同，=[c=跳转至上一不同；
+-  合并：=dp=-"diff put"，=do=-“diff other”；

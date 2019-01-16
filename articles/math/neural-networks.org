@@ -1,0 +1,169 @@
+* 模型
+
+** M-P神经元模型
+
+典型的[[https://en.wikipedia.org/wiki/Artificial_neuron][M-P神经元模型]]
+的输出为： [y=f(\sum/{i=1}\^{n}{w/{i}x\_{i}-\theta})]
+其中(\theta)为阈值，(x\_i)为第i个神经元的输入，(w\_i)为第i个神经元的输入的权重。通常也会表示为(z=\sum{w_{i}x_{i}+b})且(y=\sigma{(z)})
+
+激活函数f可以通过(\sum/{i=1}\^{n}{w/{i}x\_{i}})与阈值比较，如果大于阈值则输出1，否则输出0（或者-1）。理想的激活函数是[[https://en.wikipedia.org/wiki/Sign_function][阶跃函数]]
+，但是由于阶跃函数不连续且不光滑，因此实际上会用[[https://en.wikipedia.org/wiki/Sigmoid_function][sigmoid函数]]
+作为激活函数。
+
+多个神经元组合就得到了神经网络。
+
+** 感知机
+
+[[https://en.wikipedia.org/wiki/Perceptron][感知机]]
+由两层神经元组成，第一层神经元接收输入，输出神经元是M-P神经元，可实现与、或、非等运算，但是某些简单的操作却无法实现（比如异或）。
+
+感知机的学习过程（将(\theta)作为({x\_0}=-1)的权重(w\_0)）为：
+[w\_{i}\leftarrow{w_{i}+\triangle{w_i}}]
+[\triangle{w_i}=\eta(y-\hat{y})x\_i] 其中(\eta\in(0,1))为学习率。对于
+*线性可分* 的问题，感知机的学习过程一定会收敛。
+
+** 多层神经网络
+
+对于线性不可分的问题，则需要使用多层网络进行解决，即每层神经元与下层神经元完全连接，同层之间不存在连接，也没有跨层的连接，除开输入层与输出层的中间层为*hidden
+layer*，隐层与输出层包含功能神经元，输入层仅接收输入，典型的多层网络比如[[https://en.wikipedia.org/wiki/Feedforward_neural_network][多层前馈神经网络]]。
+
+** 多层感知机（MLP）
+
+多层感知机是一种多层前馈神经网络（数据从输入层进入，流经隐藏层，最后到达输出层），至少需要包含三层layers或者一层hidden
+layers，训练时使用[[https://en.wikipedia.org/wiki/Backpropagation][误差逆传播(Backpropagation)]]算法。
+
+** DNN
+
+DNN也是一种典型的前馈神经网络，单单从结构上来看，也可以理解成隐藏层数更多的MLP。
+
+** RNN（Recurrent）
+
+[[https://en.wikipedia.org/wiki/Recurrent_neural_network][RNN]]
+即循环神经网络，对于训练样本是连续的序列，比如连续的语音、连续的文字等情况，难以直接切分成独立的样本进行训练的情况，RNN可以很好的解决。
+
+*** 经典RNN
+
+假设时间序列(t)从1到(\tau)，对于其中任意一个序列(t)，(x^{{(t)})为当前序列样本的输入，隐藏状态(h}{(t)})由(x^{{(t)})和(h}{(t-1)})共同决定：
+[h\^{(t)}=\sigma{(z^{(t)})}=\sigma{(Ux^{(t)}+Wh^{(t)}+b)}]
+其中(\sigma)通常为sigmoid激活函数，对应的输出为： [o^{{(t)}=Vh}{(t)}+c]
+最终在序列$t$的预测输出为： [\hat{y}\^{(t)}=\sigma{(o^{(t)})}]
+而这里的激活函数一般为softmax。整个过程中的(U,V,W,b)在整个RNN网络中共享（相同），其可以理解每一步都在做相同的事，只是输入不同，这样大大降低了网络中要学习的参数。
+
+如果将感知机比喻为二维平面，那么RNN则可以理解为三位平面，从三位平面的角度看（时间序列），相邻二维平面之间并非独立，而是有所关系。
+
+1. N vs. N RNN
+
+   这种RNN结构上要求输入序列与输出序列等长，因此比较适用领域较小，著名的Char
+   RNN即属于此类，输入一个字符，计算下一个字符的概率。
+
+   [[https://pic2.zhimg.com/80/v2-629abbab0d5cc871db396f17e9c58631_hd.jpg]]
+2. N vs. 1 RNN
+
+   即输入是一个序列，但是输出是一个单独的值，这种结构通常可以用于序列分类问题（比如实体关系分类、情感倾向分析）。
+
+   [[https://pic1.zhimg.com/80/v2-6caa75392fe47801e605d5e8f2d3a100_hd.jpg]]
+3. 1 vs. N RNN
+
+   从图像生成一段文字可以采取这种方式（或者对文章产生摘要？）。
+
+   [[https://pic1.zhimg.com/80/v2-87ebd6a82e32e81657682ffa0ba084ee_hd.jpg]]
+   [[https://pic1.zhimg.com/80/v2-fe054c488bb3a9fbcdfad299b2294266_hd.jpg]]
+4. N vs. M RNN
+
+   通常又叫Encoder-Decoder模型，也叫Seq2Seq模型。这种情况即输入序列长度与输出序列长度不等长，最常见的例子就是机器翻译（原语言和目的语言的长度并不相同）。该模型首先将输入编码成上下文相关的向量(c)，然后使用另一个RNN网络对向量(c)进行解码。
+
+   [[https://pic1.zhimg.com/80/v2-e0fbb46d897400a384873fc100c442db_hd.jpg]]
+   由于不限制输入和输出的长度，因此NvM RNN
+   可用于机器翻译、文本摘要、语音识别（语音到文字序列）
+
+*** Bi-RNN
+
+为了加入未来的上下文信息，引入了[[https://en.wikipedia.org/wiki/Recurrent_neural_network#Bi-directional][双向RNN]]
+，常见的解决思路是在输入和输出之间加入一些延迟，因此延迟的这些输出已经获取到了一定的输入信息，但是如果把延迟设置的过大，整个网络将花费大量的精力用于记忆输入信息，引起建模能力下降。
+
+*** LSTM
+
+传统RNN的问题在于当前的输出(h\_{t})和前一隐藏状态(h\_{t-1})相关，而和(h\_{t-2})间接相关...如此相关性递减，而在有些领域（比如NLP）中，当前输出和前面很远的隐藏状态的输出相关，[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/][这篇文章]]
+中举了一个例子：I grew up in France... I speak fluent
+French\_。在这里，French位置根据前面两个单词的预测可能是任何语言，但在前方很远的地方却已经给出了很明显的“提示”。
+
+为了解决这样的问题，[[http://www.bioinf.jku.at/publications/older/2604.pdf][Hochreiter
+& Schmidhuber (1997)]]
+提出了[[https://en.wikipedia.org/wiki/Long_short-term_memory][LSTM]]
+，其是经典RNN的变种之一。RNN在处理(x^{{(t)})和(h}(t-1))时，使用的是普通的激活函数sigmoid，而LSTM改造了这一块，包含更复杂的结构，简单说来就是在新一时间序列轮时，决定哪些更新哪些不更新。
+
+详细的说来，在RNN中的(\sigma{(z^{t})})这一块，LSTM替换成了[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png]]
+，同时不同于RNN，LSTM在隐藏状态(h\^{(t)})的基础上还增加了一个 *细胞状态*
+(C\^{(t)})。首先，在[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-focus-f.png]]
+这里： [f^{{(t)}=\sigma{(W_{f}\cdot{[h^{(t-1)},x^{(t)}]}+b_{f})}]
+该函数的输出值（0～1）决定(C}{(t-1)})中有多少保留，有多少丢弃，保留的保留多少，丢弃的丢弃多少。然后[[https://upload-images.jianshu.io/upload_images/42741-7fa07e640593f930.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700][input
+gate]]
+这里由两部分决定新的信息（(h^{{(t-1)})和(x}{(t)})）中有多少加入到新的细胞状态(C^{{(t)})中：
+[i}{(t)}=\sigma{(W_{i}\cdot{[h^{(t-1)},x^{(t)}]}+b_{i})}]
+[\hat{C}^{{(t)}=tanh(W\_{C}\cdot{[h^{(t-1)},x^{(t)}]}+b\_{C})]
+此时可以将(C}{(t-1)})更新为(C^{{(t)})：
+[C}{(t)}=f^{{(t)}/C^{{(t-1)}+i}{(t)}/\hat{C}}{(t)}]
+完成后，会有[[https://upload-images.jianshu.io/upload_images/42741-4c9186bf786063d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700][output
+gate]] 来决定细胞状态的什么特征信息可以输出：
+[o^{{(t)}=\sigma{(W_{o}\cdot{[h^{(t-1)},x^{(t)}]}+b_{o})}]
+[h}{(t)}=o\^{(t)}*tanh(C\^{(t)})]
+
+1. Bi-LSTM
+
+   结构和Bi-RNN相同，只是其中的隐藏层单元换成了LSTM单元，有LSTM的原理可知其计算量庞大，再加上双向，计算量应该已经远远大于了原始的RNN。
+
+*** GRU
+
+和LSTM不同的是，[[https://en.wikipedia.org/wiki/Gated_recurrent_unit][GRU]]
+只有两个gates：reset gate和update
+gate，虽然gate少了一个，但是GRU复杂性相对较低，并且性能上和LSTM差距不大。其将LSTM上的input
+gate和forget gate融盒成一个update gate，update
+gate决定当前(x\_t)对整体意思是否重要，如果不重要，就将当前词一定程度的忽略，直接将(h^{{(t-1)})传递给(h}{(t)})，reset
+gate则用于判断上一隐层单元(h^{{(t-1)})对当前词(x}{(t)})的影响力大小，如果影响力较小，则尽量从当前词(x\^{(t)})开始表述意思。
+
+1. Bi-GRU
+
+   结构同Bi-RNN相同，隐藏层单元换成了GRU单元，相较于Bi-LSTM计算量较低，但是性能差别不大。
+
+*** Attention机制
+
+在N vs.
+M版本的RNN中，我们需要将输入encode成单个的向量(c)，因此(c)中会包含语句中所有的信息，因此其长度就是模型的性能瓶颈，而Attention机制就是在decode的隐层中的每一层都加入不同的(c\_i)，因此在decode时，其输出不仅与前一隐层的输出有关系，还与encode的时候计算的(c\_i)有关系。
+
+因此可以说，attention机制的实现是通过保留encode时的中间输出结果，然后训练一个模型来对这些输出结果进行选择性的学习并且在decode时将数输出序列与之关联的过程。
+
+*** TDNN（时延神经网络）
+
+[[https://blog.csdn.net/richard2357/article/details/16896837][这个博客]]
+很清晰的说明了其结构，TDNN最开始发明于语音识别。语音数据以帧为单位，在传统的神经网络中，将每帧的特征提取出并传入神经网络中进行训练，TDNN则将连续的多帧（即名称“时延”的来历，示例中使用的是2）的特征传入神经网络，随着时间窗口的推移，每个时间窗口都可以计算出当前预测是属于哪一类，最后统计得分即可作出语音识别的判断。
+
+通常在隐层与输出层之间也有延时。
+
+** CNN
+
+[[https://en.wikipedia.org/wiki/Convolutional_neural_network][卷积神经网络]]
+通常用于计算机视觉，对于图像中的同一个物体，如果只是位于不同图像的不同位置，如果使用传统的前馈神经网络，由于其是全联接的，即输入层与隐层之间是完全连接的，则需要不同的样本对所有的位置情况进行覆盖，而无法学习到图像中物体的特征，CNN的隐层单元则是只与输入单元中在图像中“相邻的一部分”连接，而这所谓“相邻的一部分”的选择方式其实就是图像中[[http://www.cnblogs.com/nsnow/p/4562308.html][相邻的部分传递给下一层的某个单元]]
+，
+同一层中所有单元接收上一层（“一部分”）输入的权重共享，因此CNN中隐藏层中的单元必然比输入层的单元的个数要少。经过卷积层之后的Convolved
+features还需要进行池化，以克服计算量仍然较大且过拟合的问题，就是在卷积特征的基础上对一个区域进行特定特征的平均值（或者最大值）的计算，以计算后的值代替这个区域，进一步降维。进行卷积和池化的原因都是基于图像具有“静态性”的属性，因此意味着一个图像区域有用的特征极有可能在另一个区域同样的使用。
+
+* 学习算法
+
+从原理上来说，神经网络同SVM一样，都是将当前线性不可分的空间投射到另一个线性可分的空间中，只是神经网络利用了矩阵（(W)）的线性变化加上激活函数(f(\cdot))的非线性变化共同作用来达到投射的目的。一个神经网络，增加一层layer的点数即是增加线性转换的能力，增加layer的层数即是增加非线性转换的能力。线性转换负责对空间进行升维／降维、放大／缩小、旋转和平移，而非线性转换则负责对空间进行“弯曲”。如果将输入层接收的元素比喻为当前所有种类的原子，则随着layers的递进，原子会递进组合成新物质，最终甚至组合成整个万千世界，而这中间的矩阵(W)则储存着如何从上一层的物质形成新的物质的信息。
+
+** GAN
+
+* 参考
+
+-  周志华，《机器学习》
+-  [[https://en.wikipedia.org/wiki/Main_Page][wikipedia]]
+-  [[https://zhuanlan.zhihu.com/p/28054589][完全图解RNN、RNN变体、Seq2Seq、Attention机制]]
+-  [[http://colah.github.io/posts/2015-08-Understanding-LSTMs/][Understanding
+   LSTM Networks]]
+-  [[https://zhuanlan.zhihu.com/p/22888385][深层学习为何要“Deep”（上）]]
+-  [[https://zhuanlan.zhihu.com/p/27642620][YJango的卷积神经网络------介绍]]
+-  [[http://colah.github.io/posts/2014-03-NN-Manifolds-Topology/][*
+   Neural Networks, Manifolds, and Topology]]
+-  [[http://colah.github.io/posts/2015-08-Backprop/][* Calculus on
+   Computational Graphs: Backpropagation]]
+-  [[https://blog.csdn.net/richard2357/article/details/16896837][TDNN时延神经网络]]

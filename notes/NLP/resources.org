@@ -1,0 +1,5 @@
+* 资源连接
+
+-  [[http://www.cnblogs.com/yuxc/archive/2011/08/29/2157415.html][《Python自然语言处理》学习笔记索引]]
+-  [[https://github.com/niderhoff/nlp-datasets][niderhoff/nlp-datasets]]：
+   和NLP相关的数据集汇总

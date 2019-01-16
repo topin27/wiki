@@ -1,0 +1,271 @@
+-  [[https://www.kdnuggets.com/2017/01/machine-learning-cyber-security.html][Machine
+   Learning and Cyber Security Resources]]:
+   列出了应用在安全领域的一些较高质量算法的papers。
+-  [[http://www.secrepo.com/][SecRepo.com - Samples of Security Related
+   Data]]: 安全领域的一些样本，具体质量及数量如何未有考证。
+-  [[https://research.google.com/pubs/SecurityPrivacyandAbusePrevention.html][Security,
+   Privacy and Abuse Prevention]]:
+   google的安全研究方向，以及各个方向的高质量论文。
+-  [[https://www.anquanke.com/post/id/107124]]:
+   360的检测网络中是否有木马回连cc服务器的算法，但是目前的问题在于数据集不好收集，但是也有可能某些开源数据集满足其条件；
+-  [[https://github.com/NagabhushanS/Machine-Learning-Based-Botnet-Detection]]:
+   一个僵尸网络的检测源码（内含数据集，数据集应该是用的[[https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/][这个]]
+   ），看源码似乎只是简单的将各种算法合在了一块，可以参考其特征提取的方式；
+-  [[https://www.kaggle.com/c/malware-classification/][Microsoft Malware
+   Classification Challenge (BIG 2015)]]：kaggle上关于恶意程序分类的竞赛
+
+* 钓鱼网址检测
+
+-  [[https://archive.ics.uci.edu/ml/datasets/Phishing%2BWebsites][<https://archive.ics.uci.edu/ml/datasets/Phishing+Websites>]]:
+   钓鱼网址的样本，并且有文档详细说明了钓鱼网址的特点，同时[[https://github.com/rishy/phishing-websites][这里]]
+   也有一个现成的repo。
+-  [[http://eprints.hud.ac.uk/id/eprint/24330/]]:
+   同样也是钓鱼网址的样本，并且有相关的论文
+
+* 入侵检测
+
+-  [[https://github.com/alryco/Network-Intrusion-Detection-System]]:
+   一个网络入侵检测的源码（数据集是pcap抓包），但是根据代码来看好像是实时的？；
+-  [[https://github.com/mpab/kddcup99]]:
+   kdd99的一份代码，检测网络入侵，[[https://blog.csdn.net/com_stu_zhang/article/details/6987632][这里]]
+   对kdd99数据集进行了详细的描述；
+-  [[https://github.com/chinskiy/KDD-99]]: 同上；
+-  [[http://enigmater.blogspot.hk/2017/03/intrusion-detection-based-on-supervised.html]]:
+   一篇使用传统的方法来进行入侵检测的文章，其中包含源码，但是其中一个有问题的地方是数据集是使用正则直接在访问日志上生成的，有参考借鉴意义的地方在于其使用的数据集及处理方式；
+-  [[https://github.com/vinayakumarr/Network-Intrusion-Detection]]:
+   有比较大的参考意义，其使用DL实现了一批算法来进行入侵检测，数据集也都是公开数据集，同时附带有相关论文且相对比较新；
+
+* 异常流量检测（NTA）
+
+** TODO
+[[https://github.com/rkmalaiya/network_anomaly_detection_deep_learning][rkmalaiya/networkanomalydetectiondeeplearning]]
+code
+
+用于检测网络异常流量的代码，比较新，repo上描述有相关论文会发表，但是目前还未搜到；
+
+** TODO
+[[https://github.com/dethakur/NetworkAnomalyDetection][dethakur/NetworkAnomalyDetection]]
+code
+
+一个用于检测网络异常流量的代码，没见有相关的论文，数据集使用的是CAIDA；
+
+** DONE
+[[https://github.com/axelfahy/NetworkAnomalyDetection][axelfahy/NetworkAnomalyDetection]]
+code
+
+一个基于spark的网络异常流量检测scala实现，数据集使用的是KDD99。
+
+算法方面，就是直接使用了spark中的三个聚类算法而已。
+
+** TODO
+[[https://schd.ws/hosted_files/flocon2018/14/1.%2520Palladino_FloCon_2018-01-09.pdf][Anomaly
+Detection in Cyber Networks using Graph-node and Role-dynamics and
+NetFlow Bayesian Normalcy Modeling]] ppt
+
+** DONE
+[[https://www.symantec.com/connect/articles/detecting-worms-and-abnormal-activities-netflow-part-1][Detecting
+Worms and Abnormal Activities with NetFlow, Part 1]] blog
+
+主要介绍了使用NetFlow来进行异常流量检测的方式。
+
+NetFlow是一个流量诊断工具，通常在思科和juniper的路由器中有所集成，通过接口可以将流量信息以flow的形式导出并存储，flow通常可以被表示为一个七元组：(source
+IP address, destination IP address, source port number, destination port
+number, protocol type, type of services, and the router input
+interface)。满足以下条件的过期flow将被导出：
+
+-  The transport protocol indicates that the connection is completed
+   (TCP FIN), and there is a small delay to allow for the completion of
+   the FIN acknowledgment handshaking.
+-  Traffic inactivity exceeds 15 seconds.
+-  For flows that remain continuously active, flow cache entries expire
+   every 30 minutes to ensure periodic reporting of active flows.
+
+这些通过NetFlow保存的flow信息并没有packet
+payload，这样分析效率较高，但是无法进一步深入分析流量内容。
+
+Flow-based analysis methods分为Top N and Baseline和Pattern Matching。Top
+N and
+Baseline就是传统常见的建立基线模型，然后检测偏离基线的样本，该方法又分为：
+
+-  Top N
+   session：单个主机异于基线地和过多的主机或者主机群进行连接，通常Worm、DoS/DDoS和端口扫描会导致该情况；
+-  Top N
+   data：一个网络中的流量大户排名通常都是相对固定的，如果发生了排名上的改变，那么可以怀疑有问题，
+
+Pattern
+Matching相对于Baseline较为简单，就是满足某些条件的流量就可以引起怀疑，比如Port
+matching和IP address
+matching。某些类型的攻击会使用特定类型的端口，比如SQL Slammer
+worm使用1434、NetBus
+Trojan使用端口12345，而某些类型的攻击则会使用一些IANA保留的IP来进行攻击。
+
+** DOING [[http://www.docin.com/p-1064202974.html][Network Anomaly
+Detection Based on Statistical Approach and Time Series Analysis]] paper
+
+上海交大的一篇关于异常流量检测的毕业论文。
+
+** DONE
+[[https://www.r-bloggers.com/data-mining-for-network-security-and-intrusion-detection/][Data
+mining for network security and intrusion detection]] blog
+
+Varun Chandola et al. proposed to derive following features:
+
+-  Time window based:
+
+   -  Number of flows to unique destination IP addresses inside the
+      network in the last T seconds from the same source
+   -  Number of flows from unique source IP addresses inside the network
+      in the last T seconds to the same destination
+   -  Number of flows from the source IP to the same destination port in
+      the last T seconds host based -- system calls network based --
+      packet information
+   -  Number of flows to the destination IP address using same source
+      port in the last T seconds
+
+-  Connection based:
+
+   -  Number of flows to unique destination IP addresses inside the
+      network in the last N flows from the same source
+   -  Number of flows from unique source IP addresses inside the network
+      in the last N flows to the same destination
+   -  Number of flows from the source IP to the same destination port in
+      the last N flows
+   -  Number of flows to the destination IP address using same source
+      port in the last N flows
+
+** DONE
+[[http://www.blackhat.com/presentations/bh-europe-05/bh-eu-05-fischbach.pdf][Network
+Flows and Security]] ppt
+
+ppt的中间部分大概的介绍了各种异常流量的特点。
+
+** DONE
+[[https://blog.csdn.net/g2v13ah/article/details/78474370][异常检测：百度是这样做的]]
+blog
+
+三个场景：
+
+1. 关心数据是否超出了一定波动范围（数据无规律波动，但正常基本在一个较小的波动范围）：典型的基线场景，通常会按照常态波动范围设定一个或者多个恒定阈值，超过阈值报警；
+2. 关心突变的数据（数据长期波动较大，但正常情况下短期波动幅度较小，体现在图像上应该是一条较为光滑的曲线）：主要思想就是使用
+   *环比附近数据* ，检查是否存在突然大幅的上涨或下跌；
+3. 数据有规律的周期性波动：检测方式是 *与历史数据做同比*
+   ，从而发现异常。
+
+*** 恒定阈值类算法
+
+通常是超过一定的阈值就报警，但是会出现毛刺的问题，即数据来回抖动时，会产生大量无效的报警，改进方式是使用filter，比如连续5个时刻超过一定阈值才报警，但是太过僵硬，中间只要一个点回到阈值范围类整体就不会再报警，进一步改进可以使用更加柔性的
+*累积法*
+：一段是窗口内数据的均值超过阈值才触发报警。[s(t)=\frac{x_t+x_{t-1}+\cdots+x_{t-w+1}}{w}]
+
+*** 突升突奖类算法
+
+发生突变的含义是发生了均值漂移。可以求取数据最近两个窗口的均值变化比例，将原始数据转换到了变化比例空间（r空间），然后在r空间上设置阈值就可以检测出数据的突升或者突降。[r(t)=\frac{x_t+x_{t-1}+\cdots+x_{t-w+1}}{x_{t-w}+x_{t-w-1}+\cdots+x_{t-2w+1}}]
+
+*** 同比类算法
+
+假设每天同时刻的数据分布相似，计算历史上相同时间窗口数据的均值和标准差，然后计算当前点的
+*z-score*
+值，即当前点的值减去均值后再除以标准差，逐点计算z值可以把原始数据转换到另一个空间（z空间），在z空间中设置阈值即可发现异常。[z(t)=\frac{x_t-mean(x_{t-kT-w}:x_{t-kT+w})}{std(x_{t-kT-w}:x_{t-kT+w})}]
+
+*** 算法选择决策树&参数自动配置算法
+
+不同曲线选择不同的算法，大量曲线的算法选择成本很高。比如不同省份的流量数据，流量大的省份的曲线周期性很明显，更适合同比算法，流量小的省份曲线基本平稳，更适合配置恒定阈值。此外，算法在不同时段的参数不同，工作日与休假日的参数、白天与晚上的参数不同，业务系统的架构调整也会导致参数不同，因此算法和参数都需要定期维护，成本较高。解决该问题的方式是算法选择决策树和参数自动配置。
+
+1. 算法选择决策树
+
+   根据前面的分析可得：
+
+   1. 周期数据->同比算法
+   2. 全局远大于局部波动->突升突降
+   3. 全局近似等于局部波动->恒定阈值
+
+   因此要自动选择算法，首先需要确定：1.如何判断数据的周期性，2.如何界定数据的全局与局部波动范围。
+
+   1. 周期数据判断方法
+
+      基于差分的数据周期特性判断方法：
+
+      -  假设：大部分周期数据的周期都是一天
+      -  判断步骤：
+
+         -  周期内cusum-归一化
+         -  周期间数据差分
+         -  使用方差进行分类判断
+
+      临近两天数据做差分，如果是周期数据，差分后可以消除掉原有数据的全局波动，然后结合方差的阈值判断可以确定数据是否由周期性。归一化是为了去除不同天数据的上下波动。
+
+   2. 数据的全局与局部波动范围
+
+      分离出周期性数据后，需要衡量数据的全局波动和局部波动的大小。数据方差可以直接表达全局波动范围，对数据施加小尺度的小波变化可以得到局部波动，局部波动的方差反映了局部波动的大小。
+
+2. 参数自动配置算法
+
+   对于恒定阈值的参数自动配置，估算罕见数据出现的概率，即可确定曲线的阈值，使用ECDF（经验累计概率分布曲线）来估计随机变量的概率分布，ECDF曲线的横轴是数据值，纵轴是概率，表达的是小于等于某数值的样本比例。其他两种算法由于最终都是转换到特定的空间使用阈值方式处理，因此参数自动配置方式也是类似。
+
+** TODO [[http://www.doc88.com/p-7794205294246.html][时间窗口检测异常]]
+paper
+
+** DONE
+[[https://zhuanlan.zhihu.com/p/33695908][用Python预测「周期性时间序列」的正确姿势]]
+blog
+
+** TODO
+[[https://www.leiphone.com/news/201712/zbX22Ye5wD6CiwCJ.html][Kaggle比赛冠军经验分享：如何用
+RNN 预测维基百科网络流量]] blog code
+
+** DONE
+[[http://www.vants.org/?post%3D185][异常流量分析方法------发现-定位-管控]]
+blog
+
+对常见的攻击类型及排查处理方式给了一个大概的总结，可以从中提取出一些有效的特征。
+
+** DOING
+[[https://www.cnblogs.com/alisecurity/p/6378869.html][基于机器学习的web异常检测]]
+blog
+
+观点：“正常流量总是相似的，异常流量各有各的异常”。因此使用规则判断坏的流量，而使用模型判断好的流量。
+
+*** 基于统计学习模型
+
+首先对数据建立特征集，然后对每个特征进行统计建模。对于测试样本，首先计算每个特征的异常程度，再通过模型对异常值进行融合打分，作为最终异常检测判断依据。
+
+-  使用切比雪夫不等式判定参数值长度
+-  使用卡方检验判定字符频率分布是否符合理论值
+-  建立参数有向图，判断是否有违规顺序关系
+-  使用切比雪夫不等式判定时间段内访问频率的异常
+-  使用卡方检验计算访问时间间隔的异常
+
+*** 基于文本分析的机器学习模型
+
+url参数通常是由后台代码进行解析，因此每个参数都有一个取值范围，其允许的输入也有一定的模式。
+
+基于HMM的状态序列建模，首先将原始数据转化为状态表示，比如数字用N表示状态，字母用a表示状态，其他字符保持不变。这一步也可以看做是原始数据的归一化(Normalization)，其结果使得原始数据的状态空间被有效压缩，正常样本间的差距也进一步减小。
+
+紧接着，对于每个状态，统计之后一个状态的概率分布。例如，下图就是一个可能得到的结果。“^{”代表开始符号，由于白样本中都是数字开头，起始符号(状态})转移到数字(状态N)的概率是1；接下来，数字(状态N)的下一个状态，有0.8的概率还是数字(状态N)，有0.1的概率转移到下划线，有0.1的概率转移到结束符(状态$)，以此类推。
+
+正常样本的状态序列出现概率要高于异常样本，通过合适的阈值可以进行异常识别。
+
+** 基于单分类模型
+
+在二分类问题中，由于我们只有大量白样本，可以考虑通过单分类模型，学习单类样本的最小边界，边界之外的则识别为异常。通常使用单类支持向量机（one-class
+SVM）。
+
+成功案例McPAD的思路是：
+
+-  使用ngram将url向量化，使用one-hot表示；
+-  由于one-hot之后的维度较高，需要特征降维，McPAD使用了聚类以达到降维的目的。每个2-gram词都有对应的样本集（包含该2-gram词的样本），因此每个2-gram词都可以通过samples的向量来表达，对2-gram词的向量进行聚类，指定的类别k即为降维后的特征维数；
+-  降维后的特征向量再使用单类svm进行模型训练。
+
+* 用户行为分析（UBA）
+
+** DOING
+[[https://www.ekransystem.com/en/blog/best-practices-building-baseline-user-behavior][Best
+Practices for Building a Baseline of User Behavior in Enterprise]] blog
+
+* sql注入
+
+** DONE
+[[http://www.freebuf.com/articles/web/176709.html][基于卷积神经网络的SQL注入检测]]
+blog code
+
+使用word2vec来建立特征。

@@ -1,0 +1,4 @@
+* TODO
+[[http://citeseerx.ist.psu.edu/viewdoc/download?doi%3D10.1.1.454.773&rep%3Drep1&type%3Dpdf][Fu
+T C. A review on time series data mining{J}. Engineering Applications of
+Artificial Intelligence, 2011, 24(1):164-181.]]

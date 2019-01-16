@@ -1,0 +1,327 @@
+* python中的一些奇怪的点
+
+** 编码问题
+
+*** 编码转换及unicode
+
+python2中， =encode()= 函数是将unicode转换为str，而 =decode()= 是将str转换为unicode。
+
+*** 用codecs解决py2中写入文件编码的问题
+
+使用open打开的文件写入时，对于非ascii码的字符串写入，需要先将其decode为unicode，再encode为str才能写入。可以使用codecs代替这些繁琐的操作：
+
+#+BEGIN_SRC python
+    import codecs
+
+    line = u'这是一个测试字符串'
+    fw = codecs.open('test.txt', 'a', 'utf-8')
+    fw.write(line)
+#+END_SRC
+
+使用这中方式打开的文件读取返回的字符串默认就是 unicode 的。写入时，如果字符串时 unicode 的，则使用调用 =codecs.open()= 时指定的编码进行编码后写入，如果字符串时 str 类型的，则先根据源代码文件声明的字符编码，解码成 unicode 后再进行前述操作。
+
+*** 检测编码
+
+使用 =chardet= 可以猜测字符串的编码，使用方式：
+
+#+BEGIN_SRC python
+    import chardet
+    chardet.detect('some string to detect for your own')
+#+END_SRC
+
+对于文件较大的情况，可以检测一部分来加快速度：
+
+#+BEGIN_SRC python
+    from chardet.universaldetector import UniversalDetector
+    detector = UniversalDetector()
+    for line in fp.readlines():
+        # 测试一部分，直到达到阈值
+        detector.feed(line)
+        if detector.done:
+            break
+    detector.close()
+    print detector.result
+#+END_SRC
+
+但是通常chardet无法做到完全检测准确，一个简单的workaround是通过指定一定的编码类型打开文件并捕获异常：
+
+#+BEGIN_SRC python
+    encodings = ['utf-8', 'gbk', 'gb2312', 'ISO-8859-1', 'windows-1250', 'windows-1252']
+    for e in encodings:
+        try:
+            fh = codecs.open('file.txt', 'r', encoding=e)
+            fh.readlines()
+            fh.seek(0)
+        except UnicodeDecodeError:
+            print('got unicode error with %s , trying different encoding' % e)
+        else:
+            print('opening the file with encoding:  %s ' % e)
+            break  
+    else:
+        print('no valid encoder')
+#+END_SRC
+
+** 打开文件
+
+Python2中打开文件是 =open= ，默认是 =File.open= ，但是在Python3中 =open= 被移到了 =io= 模块，因此在Python 2.6开始，引入了 =io.open= ，以兼容Python 3。
+
+=io.open= 需要多加一个参数指定编码，效果几乎同 =codecs.open= ，但是似乎在 Python 2.6 中 =io.open= 有bug会导致奇怪的问题，该问题在Python 2.7中已经修复。
+
+** list操作tricks
+
+*** 对list进行切分
+
+#+BEGIN_SRC python
+    import numpy as np
+
+    lst = range(50)
+    np.array_split(lst, 5)
+#+END_SRC
+
+** 时间相关操作
+
+*** 对带时区信息的字符串进行解析
+
+#+BEGIN_SRC python
+    from dateutil.parser import parse
+    d = parse("2012-11-01T04:16:13-04:00")
+#+END_SRC
+
+* 快速方便的达到一些奇怪的目的
+
+** 计算字符串的相似度
+
+使用difflib，参考：[[https://www.deeplearn.me/1125.html]]
+
+#+BEGIN_SRC python
+    from difflib import SequenceMatcher
+    def similar(a, b):
+        return SequenceMatcher(None, a, b).ratio()
+    similar('Apple', 'Appel')
+#+END_SRC
+
+** with语法
+
+*** 同时打开两个文件
+
+#+BEGIN_SRC python
+    with open('a', 'w') as a, open('b', 'w') as b:
+        do_something()
+#+END_SRC
+
+*** 实现=with= clause
+
+#+BEGIN_SRC python
+    class Meter():
+        def __init__(self, filepath):
+            self.filepath = filepath
+        def __enter__(self):
+            #ttysetattr etc goes here before opening and returning the file object
+            self.fd = open(self.filepath, 'r')
+            return self.fd
+        def __exit__(self, type, value, traceback):
+            #Exception handling here
+        self.fd.close()
+
+    meter = Meter('dev/tty0')
+    with meter as m:
+        #here you work with the file object.
+        m.read()
+#+END_SRC
+
+或者
+
+#+BEGIN_SRC python
+    import contextlib
+
+    @contextlib.contextmanager
+    def themeter(name):
+        theobj = Meter(name)
+        yield theobj
+        theobj.close()  # or whatever you need to do at exit
+#+END_SRC
+
+** =os.walk()= 遍历文件夹下所有文件
+
+#+BEGIN_SRC python
+    for root, _, files in os.walk('.'):
+        for f in files:
+            print os.path.join(root, f)
+#+END_SRC
+
+** 嵌套for循环的简化
+
+#+BEGIN_SRC python
+    for x in x_list:
+        for y in y_list:
+            pass
+#+END_SRC
+
+可以简化成：
+
+#+BEGIN_SRC python
+    from itertools import product
+    for x, y in product(x_list, y_list):
+        # do something on x and y.
+        pass
+#+END_SRC
+
+* Logging
+
+** loggers
+
+通常通过=logging.getLogger(name)=来获取，logging模块整体多线程安全，但是不支持
+多进程。logger对象有父子关系，当没有父logger对象时，它的父对象就是root，如果某
+一个logger对象打日志时，它的父对象会同时收到日志。
+
+一个简单的获取root logger的方式是：
+
+#+BEGIN_SRC python
+    logging.basicConfig(level=logging.INFO, filename='logger.log')
+    logging.info("info message")
+#+END_SRC
+
+暂时向标准输出打印日志：
+
+#+BEGIN_SRC python
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+#+END_SRC
+
+*** 使用logger记录异常
+
+#+BEGIN_SRC python
+    try:
+        open('/path/to/does/not/exist', 'rb')
+    except (SystemExit, KeyboardInterrupt):
+        raise
+    except Exception, e:
+        logger.error('Failed to open file', exc_info=True)
+#+END_SRC
+
+*** 不要在模块级别调用 =getLogger=
+
+这么做的原因是导入模块会导致模块顶级的代码执行，因此会使得=getLogger=函数执行，
+但是如果导入模块后又调用=logging.fileConfig=或者=logging.dictConfig=等函数来意
+图初始化logger时，默认这些函数会使得已经存在的logger失效，因此导致日志无法输出。
+
+** Handlers
+
+Handlers将logger发送过来的日志进行处理（比如发送到特定的文件），每个handler都
+会有一个日志级别，一个logger可以拥有多个handler因此可以根据不同的日志级别将日
+志发送给不同的handler。
+
+** Filters
+
+提供更细粒度的判断。
+
+** Formatters
+
+指定打印的布局。
+
+** 参考
+
+-  [[http://python.jobbole.com/81666/][每个Python程序员都要知道的日志实践]]
+
+* pip
+
+** 在本地安装包及其依赖
+
+安装gensim及其相关的依赖：
+
+#+BEGIN_SRC sh
+    pip install --no-index --find-links=file:///root/pkgs/ gensim
+#+END_SRC
+
+* 包导入
+
+包的导入分为相对导入和绝对导入，相对导入可以避免包名硬编码带来的问题。
+
+python2默认为相对路径导入，而python3默认为绝对路径导入。而要在python2中使用绝对路径导入，只需：
+
+#+BEGIN_SRC python
+    from __future__ import absolute_import
+#+END_SRC
+
+* 性能优化
+
+** profile包
+
+=profile= 包完全由python实现，对应的 =cProfile= 包中有一部分由C实现。一个简单的执行方式是：
+
+#+BEGIN_EXAMPLE
+    python -m cProfile test.py 
+#+END_EXAMPLE
+
+或者编译为 =pstats= 模块支持的格式：
+
+#+BEGIN_EXAMPLE
+    python -m cProfile -o funb.prof test.py
+#+END_EXAMPLE
+
+然后使用 =pstats= 进行分析：
+
+#+BEGIN_EXAMPLE
+    python -c "import pstats; p=pstats.Stats('del.out'); p.sort_stats('time').print_stats()"
+#+END_EXAMPLE
+
+找到大致的热点位置后，然后使用 =line_profiler= 模块来看每行的执行情况。
+
+** 并行化
+
+#+BEGIN_SRC python
+    import multiprocessing
+
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+
+    def f(x):
+        pass
+
+    for i in pool.imap(f, [1, 2]):
+        print i
+#+END_SRC
+
+但是需要注意的是 =Pool.map= 无法pickle对象或者 inner function ，因此如果有状态需要 共享的话可以考虑实现对象的 =__call__= 方法，然后通过 =object()= 传入 =Pool.map= 。
+
+#+BEGIN_SRC python
+    class PredictFunction(object):
+
+        def __init__(self, predictor, modeltype):
+            self.guesser = Guess()
+            self.predictor = predictor
+            self.modeltype = modeltype
+
+        def __call__(self, path):
+            # do something on path
+            pass
+
+    f = PredictFunction(predictor, modeltype)
+    pool.imap(f, [1, 2])
+#+END_SRC
+
+* 正则表达式
+
+** lookahead
+
+lookahead 可以用于匹配过滤单词，其语法格式为：
+
+#+BEGIN_SRC python
+    # 满足肯定条件过滤
+    (?=expr1)(?=expr2)
+#+END_SRC
+
+#+BEGIN_SRC python
+    # 满足否定条件过滤
+    (?!expr)
+#+END_SRC
+
+如：
+
+#+BEGIN_SRC python
+    (?=\bfoo\b|\bbar\b)\b\w+\b
+#+END_SRC
+
+将会匹配一句话中所有不是"foo"且不是"bar"的单词。
+
+*注意：* lookahead 是"zero-width"的，即他们不占用任何的字符位置空间[1]，因此在匹配的时候除了指定 lookahead 之外，还需要额外的表达式。
+
+1. [[https://stackoverflow.com/questions/9952169/negative-look-ahead-python-regex][StackOverflow: Negative look ahead python regex]]

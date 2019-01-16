@@ -1,0 +1,6 @@
+-  [[https://mp.weixin.qq.com/s?__biz%3DMzIzODExMDE5MA%3D%3D&mid%3D2694182558&idx%3D1&sn%3D7a9043417ceaf3ca783a507eea18c2d6&chksm%3Dcc5f021ffb288b095834570b123ad9c5d4e36e852f9f5bc4fea738486e3577dde69fa9b9b43f#rd][异常点检测算法综述]]：
+   一篇综述性质的PPT，文章底部也包含了一些详细的讲解；
+-  [[https://blog.csdn.net/wangyibo0201/article/details/51705966][异常点/离群点检测算法------LOF]]
+-  基于频繁项集的聚类算法（Aprior/FP-Growth）/PCA
+-  [[http://www.brendangregg.com/FrequencyTrails/outliers.html][Frequency
+   Trails: Detecting Outliers]]-Brendan Gregg的跨界

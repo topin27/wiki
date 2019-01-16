@@ -1,0 +1,10 @@
+* Papers
+
+** TODO [[https://arxiv.org/pdf/1711.06025.pdf][Sung F, Yang Y, Zhang L,
+et al. Learning to Compare: Relation Network for Few-Shot Learning{J}.
+2017.]]
+
+使用关系网络来进行少样本学习，[[https://zhuanlan.zhihu.com/p/35379027][这里]]有一篇介绍性的文章，大概思想是利用Meta
+Learning的方式来进行学习。
+
+源码地址：[[https://github.com/floodsung/LearningToCompare_FSL][link]]

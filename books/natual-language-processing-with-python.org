@@ -1,0 +1,5 @@
+Author: Steven Bird, Ewan Klein, and Edward Loper
+
+Site: [[http://www.nltk.org/book/]]
+
+* Learning to Classify Text
