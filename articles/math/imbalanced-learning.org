@@ -1,0 +1,69 @@
+#+TITLE: Imbalanced Learning
+
+* Learning from Imbalanced Classes
+  
+Post original here: https://www.svds.com/learning-imbalanced-classes/
+
+** Handling imbalanced data
+
+That said, here is a rough outline of useful approaches. These are listed approximately in order of effort:
+
+- Do nothing. Sometimes you get lucky and nothing needs to be done. You can train on the so-called natural (or stratified) distribution and sometimes it works without need for modification.
+- Balance the training set in some way:
+        + Oversample the minority class.
+        + Undersample the majority class.
+        + Synthesize new minority classes.
+- Throw away minority examples and switch to an anomaly detection framework.
+- At the algorithm level, or after it:
+        + Adjust the class weight (misclassification costs).
+        + Adjust the decision threshold.
+        + Modify an existing algorithm to be more sensitive to rare classes.
+- Construct an entirely new algorithm to perform well on imbalanced data.
+
+** Digression: evaluation dos and don’ts
+
+1. Don’t use accuracy (or error rate) to evaluate your classifier.
+2. Don’t get hard classifications (labels) from your classifier (via =score= or =predict=). Instead, get probability estimates via =proba= or =predict_proba=.
+3. When you get probability estimates, don’t blindly use a 0.50 decision threshold to separate classes. Look at performance curves and decide for yourself what threshold to use (see next section for more on this). Many errors were made in early papers because researchers naively used 0.5 as a cut-off.
+4. No matter what you do for training, always test on the natural (stratified) distribution your classifier is going to operate upon. See =sklearn.cross_validation.StratifiedKFold=.
+5. You can get by without probability estimates, but if you need them, use calibration (see =sklearn.calibration.CalibratedClassifierCV=).
+
+one of these is preferable to accuracy:
+
+1. The Area Under the ROC curve (AUC) is a good general statistic. It is equal to the probability that a random positive example will be ranked above a random negative example.
+2. The F1 Score is the harmonic mean of precision and recall. It is commonly used in text processing when an aggregate measure is sought.
+3. Cohen’s Kappa is an evaluation statistic that takes into account how much agreement would be expected by chance.
+
+** Oversampling and undersampling
+
+** Bayesian argument of Wallace et al.
+
+Use bagging to combine classifiers.
+
+** Neighbor-based approaches
+   
+Over- and undersampling selects examples randomly to adjust their proportions. Other approaches examine the instance space carefully and decide what to do based on their neighborhoods.
+
+For example, Tomek links are pairs of instances of opposite classes who are their own nearest neighbors. In other words, they are pairs of opposing instances that are very close together.
+
+Tomek’s algorithm looks for such pairs and removes the majority instance of the pair. The idea is to clarify the border between the minority and majority classes, making the minority region(s) more distinct.
+
+** Synthesizing new examples: SMOTE and descendants
+
+** Adjusting class weights
+   
+Many machine learning toolkits have ways to adjust the “importance” of classes. Scikit-learn, for example, has many classifiers that take an optional class_weight parameter that can be set higher than one.
+
+It should be noted that adjusting class importance usually only has an effect on the cost of class errors (False Negatives, if the minority class is positive). It will adjust a separating surface to decrease these accordingly. Of course, if the classifier makes no errors on the training set errors then no adjustment may occur, so altering class weights may have no effect.
+
+** And beyond
+
+*** New algorithms
+
+In 2014 Goh and Rudin published a paper Box Drawings for Learning with Imbalanced Data which introduced two algorithms for learning from data with skewed examples. These algorithms attempt to construct “boxes” (actually axis-parallel hyper-rectangles) around clusters of minority class examples.
+
+Their goal is to develop a concise, intelligible representation of the minority class. Their equations penalize the number of boxes and the penalties serve as a form of regularization.
+
+They introduce two algorithms, one of which (Exact Boxes) uses mixed-integer programming to provide an exact but fairly expensive solution; the other (Fast Boxes) uses a faster clustering method to generate the initial boxes, which are subsequently refined. Experimental results show that both algorithms perform very well among a large set of test datasets.
+
+*** Buying or creating more data

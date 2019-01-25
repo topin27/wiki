@@ -46,7 +46,7 @@ python2中， =encode()= 函数是将unicode转换为str，而 =decode()= 是将
 但是通常chardet无法做到完全检测准确，一个简单的workaround是通过指定一定的编码类型打开文件并捕获异常：
 
 #+BEGIN_SRC python
-    encodings = ['utf-8', 'gbk', 'gb2312', 'ISO-8859-1', 'windows-1250', 'windows-1252']
+    encodings = ['utf-8', 'gbk', 'gb2312', 'gb18030', 'ISO-8859-1', 'windows-1250', 'windows-1252']
     for e in encodings:
         try:
             fh = codecs.open('file.txt', 'r', encoding=e)

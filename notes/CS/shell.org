@@ -32,8 +32,7 @@
 
 ** =echo=
 
--  输出有颜色的文本：=echo -e "\\e\[1;<color-code>m<output string>\\e\[0m"=，
-   其中=color-code=31=表示红色，=color-code=32=为绿色；
+- 输出有颜色的文本： ~echo -e "\\e\[1;<color-code>m<output string>\\e\[0m"~ ，其中 ~color-code=31~ 表示红色， ~color-code=32~ 为绿色；
 
 ** =read=
 
