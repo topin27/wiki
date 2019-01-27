@@ -1,0 +1,10 @@
+#+TITLE: 编译器相关的高质量文章
+
+* Understanding compilers for humans
+
+原文地址：[[https://medium.com/@CanHasCommunism/understanding-compilers-for-humans-ba970e045877][这里]] ，翻译：[[http://blog.jobbole.com/114466/][人人都能读懂的编译器原理]]
+
+** 简单介绍
+
+- 编译器 :: “input -> lexer -> parser -> code generator -> output”
+- 解释器 :: “input -> lexer -> parser -> evaluator”

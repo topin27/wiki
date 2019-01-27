@@ -1,22 +1,43 @@
---------------
-
 * Cheat Sheet
 
 ** 优先连接静态库
 
-[so上有相关的问题:][[[https://stackoverflow.com/questions/6578484/telling-gcc-directly-to-link-a-library-statically]]]
-> use -l: instead of -l. For example -l:libXYZ.a to link with libXYZ.a
+[[https://stackoverflow.com/questions/6578484/telling-gcc-directly-to-link-a-library-statically][so上有相关的问题:]]
+
+#+BEGIN_EXAMPLE
+use -l: instead of -l. For example -l:libXYZ.a to link with libXYZ.a
+#+END_EXAMPLE
 
 ** 命令前缀
 
-前缀=-=表示忽略当前命令执行错误，前缀=@=表示执行时不显示当前命令
+前缀 =-= 表示忽略当前命令执行错误，前缀 =@= 表示执行时不显示当前命令
 
-** =make install=时指定路径安装
+** =make install= 时指定路径安装
 
-=make install     DESTDIR=<path>=
+=make install DESTDIR=<path>=
 
 ** 为目标添加前缀
 
+** 为当前 Makefile 定制特殊的 =PATH= 路径
+
+Makefile 默认使用的 shell 是 =sh= ，因此可以通过指定不同的 shell 来达到目的：
+
+#+BEGIN_SRC makefile
+PATH := ~/bin/:$(PATH)
+SHELL := env PATH=$(PATH) /bin/bash
+#+END_SRC
+
+但是这应该是违背了 Makefile 的初衷，Makefile 本身就是用于自动化每一行的工作，因此默认都是直接单独使用一个 shell 环境去执行 Makefile 中的每一行命令。因此该问题更完美的解决方案是：
+
+#+BEGIN_SRC makefile
+EXE_DIR ?=
+EXE := $(EXE_DIR)my-exe
+test all:
+	$(EXE)
+#+END_SRC
+
+执行时直接执行 ~make EXE_DIR=~/bins/~ 或者直接简单的 ~make~ （在 =my-exe= 已经在 =PATH= 中的前提条件下）：
+
 * 一些资源
 
--  [[http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf][和我一起写Makefile]]
+- [[http://scc.qibebt.cas.cn/docs/linux/base/%B8%FA%CE%D2%D2%BB%C6%F0%D0%B4Makefile-%B3%C2%F0%A9.pdf][和我一起写Makefile]]
