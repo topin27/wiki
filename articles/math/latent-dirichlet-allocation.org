@@ -1,53 +1,70 @@
-* 简述
+#+TITLE: Latent Dirichlet Allocation
 
 #+BEGIN_QUOTE
-  Documents are assumed to be composed of mixtures of topics, which are
-  in turn composed of mixtures of words. If we knew the topic and
-  document distributions, we could generate new documents using a
-  probabilistic model. In LDA, we run this process in reverse to infer
-  the topic and document distributions given the documents.
+  Documents are assumed to be composed of mixtures of topics, which are in turn composed of mixtures of words. If we knew the topic and document distributions, we could generate new documents using a probabilistic model. In LDA, we run this process in reverse to infer the topic and document distributions given the documents.
 #+END_QUOTE
+  
+* TODO Leonhard Euler's Integral: A Historical Profile of the Gamma Function
 
-* 基础知识
+* DOING LDA数学八卦
 
-** 伯努利分布
+** $\Gamma$ 函数
+   
+$\Gamma$ 函数的定义：$$\Gamma(x)=\int_0^\infty{t^{x-1}e^{-t}dt}$$
 
-即是简单的“两点分布”，以概率(p)和(1-p)的概率取0和1值。其(E\_{x}=p)，(D\_{x}=p(1-p))。
+该函数具有以下的递归性质：$$\Gamma(x+1)=x\Gamma(x)$$
 
-** 二项分布
+其在实数集上的版本其实就是阶乘：$$\Gamma(n)=(n-1)!$$
 
-重复n次的伯努利实验，通常记为(X{\sim}b(n,p))，其概率密度函数为：[P(K=k)={\lgroup}/{k}^{{n}{\rgroup}p}{k}(1-p)\^{n-k}]其中(\lgroup/{k}\^{n}\rgroup=C(n,k)=\frac{n!}{k!(n-k)!})是二项式系数。
+因此 $\Gamma$ 函数的主要贡献在于将阶乘拓展到了实数域，也即使得 $(\frac{1}{2})!$ 的计算有意义。同时，由于可以使用 $\Gamma$ 函数计算实数的阶乘，因此现在也可以计算实数阶的导数或者积分，原因如下：
 
-** 多项分布
+- 一阶导数： $nx^{n-1}$
+- 二阶导数： $n(n-1)x^{n-2}$
+- ...
+- k阶导数： $n(n-1)(n-2)...(n-k+1)x^{n-k}=\frac{n!}{(n-k)!}x^{n-k}$
 
-二项分布扩展到多维的情况。单次试验的值不再是0-1，而是由多个可能的值，即(\sum\_{i=1}^{{k}{p\_i}=1,p\_i>0)，其概率密度函数为：[p(x\_1,...,x\_k;n,p\_1,...,p\_k)={\frac{n!}{x_{1}!\cdots{x_{k}!}}}{p\_{1}}{x\_1}\cdots{p_{k}^{x_k}}}]
+由于 $\Gamma$ 函数的存在，因此k阶导数可以表示为： $$\frac{\Gamma(n+1)}{\Gamma(n-k+1)}x^{n-k}$$
 
-** (\beta)分布
+基于上式，取 $n=1,k=\frac{1}{2}$ ，可以计算 $x$ 的 $\frac{1}{2}$ 阶导数为： $$\frac{\Gamma(1+1)}{\Gamma(1-\frac{1}{2}+1)}x^{1-\frac{1}{2}}=\frac{2\sqrt{x}}{\sqrt{\pi}}$$
 
-(\beta)分布是一个关于概率的概率分布，观察一系列的二项分布，但是每个二项分布的(n,p)都是未知的情况下，成功率p的分布。其中(\alpha)为成功事件数，(\beta)为失败事件数。取值范围为([0,1])的随机变量x的概率密度函数为[f(x;\alpha,\beta)=\frac{1}{B(\alpha,\beta)}x^{{\alpha-1}(1-x)}{\beta-1}]其中：[\frac{1}{B(\alpha,\beta)}=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\Gamma(z)=\int\_0^{{\infty}{t}{z-1}e\^{-t}dt}]，这里的(\Gamma(x))即为gamma函数。
+同时， $\Gamma$ 函数和欧拉常数 $\gamma$ 有密切联系：$$\gamma=-\frac{d\Gamma{(x)}}{dx}|_{x=1}=\lim_{n\rightarrow\infty}(1+\frac{1}{2}+\frac{1}{3}+\cdots+\frac{1}{n}-\log{n})$$
 
-(\beta)分布的均值是(E\_x=\frac{\alpha}{\alpha+\beta})，方差是(D\_x=\frac{\alpha{\beta}}{(\alpha+\beta)^2(\alpha+\beta+1)})
+进一步还可以发现 $\Gamma$ 函数和黎曼函数 $\zeta(s)$ 有密切联系： $$\zeta(s)=1+\frac{1}{2^s}+\frac{1}{3^s}+\cdots$$
 
-** Dirichlet分布
+$\Gamma$ 函数是一个凸函数，且 $\log{\Gamma(x)}$ 也是一个凸函数，且可以证明：
 
-即是(\beta)分布在高维度上的推广，其概率密度函数为：[f(x\_1,x\_2,...,x\_k;\alpha\_1,\alpha\_2,...,\alpha/k)={\frac{1}{B(\alpha)}}{\prod/{i=1}^{{k}{x\_i}{\alpha\^i-1}}}]其中[B(\alpha)=\frac{\prod_{i=1}^{k}{\Gamma(\alpha^i)}}{\Gamma{\sum_{i=1}^{k}{\alpha}^i}},\sum{x_i}=1]
+-----
+#+BEGIN_VERSE
+*定理* : 如果 $f:(0,\infty)\rightarrow(0,\infty)$ ，且满足
 
-** 阶乘在实数上的推广
+1. $f(1)=1$
+2. $f(x+1)=xf(x)$
+3. $\log(fx)$ 是凸函数
 
-[n!=\Gamma(n+1)=\int\_0^{{\infty}{e}{-t}t\^{n}dt}]其在实数上的推广[\Gamma(x)=\int\_0^{{\infty}{t}{x-1}e\^{-t}dt}]即为欧拉Gamma函数。
+那么 $f(x)$ 只能是 $\Gamma(x)$
+#+END_VERSE
+-----
 
-** 贝叶斯学派的思考方式
+** $\Psi$ 函数
+   
+如下函数被称为 Digamma 函数： $$\Psi(x)=\frac{d\log\Gamma(x)}{dx}$$
 
-[先验分布\pi(\theta)+样本信息\chi\Rightarrow后验分布\pi(\theta|x)]
+该函数有一个很漂亮的性质： $$\Psi(x+1)=\Psi(x)+\frac{1}{x}$$
 
-在新样本到来之前，人们对(\theta)的认知是先验分布(\pi(\theta))，在得到新样本(\chi)后，人们对(\theta)的认知为(\pi(\theta|x))。
+函数 $\Psi(x)$ 和欧拉常数 $\gamma$ 以及 $\zeta$ 函数都有密切关系，令： $$\Psi_n(x)=\frac{d^{n+1}\log\Gamma(x)}{dx^{n+1}}$$
 
-** 共轭先验分布
+则 $\Psi_0(x)=\Psi(x)$ ，且：
+$$\Psi(1)=-\gamma, \Psi(2)=1-\gamma$$
+$$\Psi_1(1)=\zeta(2)=\frac{\pi^2}{6},\Psi_2(1)=-2\zeta(3)$$
 
-在贝叶斯理论体系中，如果后验概率(p(\theta|x))和先验概率(p(\theta))满足同样的分布律，那么先验和后验分布叫做满足共轭分布，同时先验分布叫做似然函数的共轭先验分布。
+** $\Gamma$ 分布
 
-** EM算法
+对 $\Gamma$ 函数做一个变形，可以得到： $$\int_0^\infty{\frac{x^{\alpha-1}e^{-x}}{\Gamma(\alpha)}}dx=1$$
 
-* 参考
+将积分中的函数看作是概率密度，可以得到一个最简单形式的 $\Gamma$ 分布的密度函数： $$\Gamma(x|\alpha)=\frac{x^{\alpha-1}e^{-x}}{\Gamma(\alpha)}$$
 
--  [[https://blog.csdn.net/v_july_v/article/details/41209515][通俗理解LDA主题模型]]
+做一个变换 $x={\beta}t$ ，就得到 $\Gamma$ 分布更一般的形式： $$\Gamma(t|\alpha,\beta)=\frac{\beta^{\alpha}t^{\alpha-1}e^{-\beta{t}}}{\Gamma(\alpha)}$$
+
+其中 $\alpha$ 是 shape parameter，主要决定了分布曲线的形状，而 $\beta$ 称为 rate parameter 或者 inverse scale parameter，主要决定曲线有多陡。
+
+指数分布和 $\chi^2$ 分布都是特殊的 $\Gamma$ 分布。

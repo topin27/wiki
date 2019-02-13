@@ -28,8 +28,7 @@ Elijah Wood :: He plays Frodo;
 
 *** 脚注
 
-=C-c C-x f= 可以在当前位置插入一个脚注， =C-c C-c=
-在脚注和标记的内容之间切换。
+=C-c C-x f= 可以在当前位置插入一个脚注， =C-c C-c= 在脚注和标记的内容之间切换。
 
 *** 常用的结构化快捷方式
 
@@ -59,7 +58,7 @@ Elijah Wood :: He plays Frodo;
 
 *** 参考
 
--  [[http://caole.net/diary/org_mode.html][Emacs org mode 学习笔记]]
+- [[http://caole.net/diary/org_mode.html][Emacs org mode 学习笔记]]
 
 * 编码转换
 
@@ -73,15 +72,13 @@ Elijah Wood :: He plays Frodo;
 
 ** 参考
 
--  [[http://www.cnblogs.com/ruizhe/archive/2010/12/02/1894506.html][emacs
-   转换文件编码]]
+- [[http://www.cnblogs.com/ruizhe/archive/2010/12/02/1894506.html][emacs 转换文件编码]]
 
 * elisp中变量的定义
 
 ** =exec-path= , =$PATH= 和 =load-path= 的区别
 
-=exec-path= 是emacs查找可执行文件的路径， =exec-path= 只在emacs启动时从
-=$PATH= 中读取值进行初始化。
+=exec-path= 是emacs查找可执行文件的路径， =exec-path= 只在emacs启动时从 =$PATH= 中读取值进行初始化。
 
 =$PATH= 自然就是用于执行shell中的命令或者 =M-!= 执行的命令。
 
@@ -89,13 +86,11 @@ Elijah Wood :: He plays Frodo;
 
 *** 参考
 
--  [[https://emacs.stackexchange.com/questions/550/exec-path-and-path][exec-path
-   and $PATH]]
+- [[https://emacs.stackexchange.com/questions/550/exec-path-and-path][exec-path and $PATH]]
 
 * 录制宏
 
-=C-x (= 开始录制， =C-x )= 结束录制， =C-x e= 单次执行宏，
-=C-u 10 C-x e= 执行宏10次。
+=C-x (= 开始录制， =C-x )= 结束录制， =C-x e= 单次执行宏， =C-u 10 C-x e= 执行宏10次。
 
 * ibuffer
 

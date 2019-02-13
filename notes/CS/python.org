@@ -170,9 +170,7 @@ Python2中打开文件是 =open= ，默认是 =File.open= ，但是在Python3中
 
 ** loggers
 
-通常通过=logging.getLogger(name)=来获取，logging模块整体多线程安全，但是不支持
-多进程。logger对象有父子关系，当没有父logger对象时，它的父对象就是root，如果某
-一个logger对象打日志时，它的父对象会同时收到日志。
+通常通过 =logging.getLogger(name)= 来获取，logging模块整体多线程安全，但是不支持多进程。logger对象有父子关系，当没有父logger对象时，它的父对象就是root，如果某一个logger对象打日志时，它的父对象会同时收到日志。
 
 一个简单的获取root logger的方式是：
 
@@ -200,15 +198,11 @@ Python2中打开文件是 =open= ，默认是 =File.open= ，但是在Python3中
 
 *** 不要在模块级别调用 =getLogger=
 
-这么做的原因是导入模块会导致模块顶级的代码执行，因此会使得=getLogger=函数执行，
-但是如果导入模块后又调用=logging.fileConfig=或者=logging.dictConfig=等函数来意
-图初始化logger时，默认这些函数会使得已经存在的logger失效，因此导致日志无法输出。
+这么做的原因是导入模块会导致模块顶级的代码执行，因此会使得 =getLogger= 函数执行，但是如果导入模块后又调用 =logging.fileConfig= 或者 =logging.dictConfig= 等函数来意图初始化logger时，默认这些函数会使得已经存在的logger失效，因此导致日志无法输出。
 
 ** Handlers
 
-Handlers将logger发送过来的日志进行处理（比如发送到特定的文件），每个handler都
-会有一个日志级别，一个logger可以拥有多个handler因此可以根据不同的日志级别将日
-志发送给不同的handler。
+Handlers将logger发送过来的日志进行处理（比如发送到特定的文件），每个handler都会有一个日志级别，一个logger可以拥有多个handler因此可以根据不同的日志级别将日志发送给不同的handler。
 
 ** Filters
 
@@ -218,10 +212,6 @@ Handlers将logger发送过来的日志进行处理（比如发送到特定的文
 
 指定打印的布局。
 
-** 参考
-
--  [[http://python.jobbole.com/81666/][每个Python程序员都要知道的日志实践]]
-
 * pip
 
 ** 在本地安装包及其依赖
@@ -229,7 +219,7 @@ Handlers将logger发送过来的日志进行处理（比如发送到特定的文
 安装gensim及其相关的依赖：
 
 #+BEGIN_SRC sh
-    pip install --no-index --find-links=file:///root/pkgs/ gensim
+  pip install --no-index --find-links=file:///root/pkgs/ gensim
 #+END_SRC
 
 * 包导入
