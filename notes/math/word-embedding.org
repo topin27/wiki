@@ -1,61 +1,53 @@
---------------
+#+TITLE: Word Embedding
 
-* Word Embedding
-
-自然语言处理中，单词并不能直接输入模型进行处理，因此需要将单词转换为词向量输入
-模型进行计算，但是词向量的转换方式需要不仅考虑词的代表性（比如one-hot编码），
-还需要考虑词的语义信息（相近词的词向量距离较近，比如word2vec），因此
-[[https://en.wikipedia.org/wiki/Word_embedding][word
-embedding]]即是将词转换为 包含尽可能多的语义信息的向量的过程。
+自然语言处理中，单词并不能直接输入模型进行处理，因此需要将单词转换为词向量输入模型进行计算，但是词向量的转换方式需要不仅考虑词的代表性（比如one-hot编码），还需要考虑词的语义信息（相近词的词向量距离较近，比如 word2vec ），因此 [[https://en.wikipedia.org/wiki/Word_embedding][word embedding]] 即是将词转换为包含尽可能多的语义信息的向量的过程。
 
 将单词表示为词向量后，有多种方式可以用来通过词向量来表示整个句子甚至整篇文章：
 
-1. Word Centroid Vector:
-
-将所有词向量加权平均，最终得到的向量就是整个文本在词向量空间中的质心；
-
-1. Continuous Bag of Words (CBOW):
-
-将定长窗口内的词向量首尾连接，便构成了这一窗口内文本的向量表示，常用方案之一；
-
-1. Word Mover's Distance (WMD):
-
-将词间的相似度使用word2vec向量间的欧式距离衡量，句子间的相似度通过求解经典的
-transportation problem
-优化问题得到。缺点是：对句子的长度敏感，长度相差很大
-的句子之间进行计算时开销较大；其次整体的计算开销也较大。
+- Word Centroid Vector :: 将所有词向量加权平均，最终得到的向量就是整个文本在词向量空间中的质心；
+- Continuous Bag of Words (CBOW) :: 将定长窗口内的词向量首尾连接，便构成了这一窗口内文本的向量表示，常用方案之一；
+- Word Mover's Distance (WMD) :: 将词间的相似度使用 word2vec 向量间的欧式距离衡量，句子间的相似度通过求解经典的 transportation problem 优化问题得到。缺点是：对句子的长度敏感，长度相差很大 的句子之间进行计算时开销较大；其次整体的计算开销也较大。
 
 * GloVe
 
 ** 参考
 
--  [[https://nlp.stanford.edu/projects/glove/][GloVe: Global Vectors for
-   Word Representation]]
+- [[https://nlp.stanford.edu/projects/glove/][GloVe: Global Vectors for Word Representation]]
 
 * word2vec
 
-word2vec采用的是n-gram model，即假设一个词只与周围n个词有关： > “The
-meaning of a word can be inferred by the company it keeps” “show > me
-your friends, and I'll tell who you are”. --
-[[http://kavita-ganesan.com/gensim-word2vec-tutorial-starter-code/#.W2PHZ8Jx2Uk][Gensim
-Word2Vec Tutorial -- Full Working Example]]
+word2vec 采用的是 n-gram model ，即假设一个词只与周围n个词有关： 
+
+#+BEGIN_QUOTE
+The meaning of a word can be inferred by the company it keeps.
+#+END_QUOTE
+
+#+BEGIN_QUOTE
+Show me your friends, and I'll tell who you are.
+#+END_QUOTE
+
+[[http://kavita-ganesan.com/gensim-word2vec-tutorial-starter-code/#.W2PHZ8Jx2Uk][Gensim Word2Vec Tutorial -- Full Working Example]]
 
 ** CBOW和skip-gram
 
-CBOW模型根据输入周围n-1个词来预测出这个词本身，而 skip-gram
-模型则能够根据词 本身来预测周围有哪些词。
+CBOW 模型根据输入周围 n-1 个词来预测出这个词本身，而 skip-gram 模型则能够根据词本身来预测周围有哪些词。
 
 ** sigmod函数
 
 sigmod函数的到函数拥有以下形式：
-[\sigma'(x)=(\frac{1}{1+e^{-x}})'=(\frac{1}{1+e^{-x}}){\cdot}(\frac{e^{-x}}{1+e^{-x}})=\sigma(x)[1-\sigma(x)]]
-并由此得出$log*σ*(x)$和$log(1-*σ*(x))$的到函数分别为
-[[log\sigma(x)]'=1-\sigma(x),[log(1-\sigma(x))]'=-\sigma(x),]
+
+$$\sigma'(x)=\frac{1}{1+e^{-x}}'=(\frac{1}{1+e^{-x}}){\cdot}(\frac{e^{-x}}{1+e^{-x}})=\sigma(x)[1-\sigma(x)]$$
+
+并由此得出 $\log\sigma(x)$ 和 $\log(1-\sigma(x))$ 的导函数分别为：
+
+$$(\log\sigma(x))'=1-\sigma(x)$$
+
+$$(\log(1-\sigma(x)))'=-\sigma(x)$$
 
 ** 参考
 
--  [[http://www.cnblogs.com/peghoty/p/3857839.html][word2vec中的数学原理详解]]
--  [[https://www.zybuluo.com/Dounm/note/591752][Word2Vec-知其然知其所以然]]
+- [[http://www.cnblogs.com/peghoty/p/3857839.html][word2vec中的数学原理详解]]
+- [[https://www.zybuluo.com/Dounm/note/591752][Word2Vec-知其然知其所以然]]
 
 * fastText
 
@@ -63,5 +55,4 @@ sigmod函数的到函数拥有以下形式：
 
 * 参考
 
--  [[https://blog.keras.io/using-pre-trained-word-embeddings-in-a-keras-model.html][Using
-   pre-trained word embeddings in a Keras model]]
+- [[https://blog.keras.io/using-pre-trained-word-embeddings-in-a-keras-model.html][Using pre-trained word embeddings in a Keras model]]
