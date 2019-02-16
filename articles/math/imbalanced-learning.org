@@ -28,7 +28,7 @@ That said, here is a rough outline of useful approaches. These are listed approx
 4. No matter what you do for training, always test on the natural (stratified) distribution your classifier is going to operate upon. See =sklearn.cross_validation.StratifiedKFold=.
 5. You can get by without probability estimates, but if you need them, use calibration (see =sklearn.calibration.CalibratedClassifierCV=).
 
-one of these is preferable to accuracy:
+One of these is preferable to accuracy:
 
 1. The Area Under the ROC curve (AUC) is a good general statistic. It is equal to the probability that a random positive example will be ranked above a random negative example.
 2. The F1 Score is the harmonic mean of precision and recall. It is commonly used in text processing when an aggregate measure is sought.

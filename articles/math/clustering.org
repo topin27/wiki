@@ -7,8 +7,8 @@
 ** 到质心的距离
 
 1. Minkowski Distance :: $d_{ij}=\sqrt{\lambda}{\sum_{k=1}^{N}|x_{ik}-x_{jk}|^{\lambda}}$
-2. Euclidean Distance :: Minkowski Distance中的$\lambda=2$
-3. Manhattan Distance :: Minkowski Distance中的$\lambda=1$
+2. Euclidean Distance :: Minkowski Distance中的 $\lambda=2$
+3. Manhattan Distance :: Minkowski Distance中的 $\lambda=1$
 
 以上的距离计算方式有一个最大的问题是取值范围大的属性对距离的影响大于取值范围小的属性。常用的做法是需要将距离进行归一化： $a_i^'=\frac{a_i-min(a_i)}{max(a_i)-min(a_i)}$
 

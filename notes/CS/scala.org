@@ -2,66 +2,49 @@
 
 ** 标识符
 
-Scala
-可以使用两种形式的标志符，字符数字和符号。字符数字使用字母或是下划线开头，
-后面可以接字母或是数字，符号"("在 Scala
-中也看作为字母。然而以")"开头的标识符 为保留的 Scala
-编译器产生的标志符使用，应用程序应该避免使用"$"开始的标识符，以
-免造成冲突。此外也应该避免使用以下划线结尾的标志符以避免冲突。符号标志符包含一
-个或多个符号，如=+，:，?=等。比如:
+Scala 可以使用两种形式的标志符，字符数字和符号。字符数字使用字母或是下划线开头，后面可以接字母或是数字，符号"("在 Scala 中也看作为字母。然而以")"开头的标识符 为保留的 Scala 编译器产生的标志符使用，应用程序应该避免使用"$"开始的标识符，以免造成冲突。此外也应该避免使用以下划线结尾的标志符以避免冲突。符号标志符包含一个或多个符号，如 =+，:，?= 等。比如:
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     +、++、:::、<、?>、:->
-#+END_EXAMPLE
+#+END_SRC
 
-Scala 内部实现时会使用转义的标志符，比如 =:->= ; 使用
-=$colon$minus$greater= 来表示这 个符号。因此如果你需要在 Java 代码中访问
-=:->= 方法，你需要使用 Scala 的内部名称 =$colon$minus$greater= 。
+Scala 内部实现时会使用转义的标志符，比如 =:->= ; 使用 =$colon$minus$greater= 来表示这 个符号。因此如果你需要在 Java 代码中访问 =:->= 方法，你需要使用 Scala 的内部名称 =$colon$minus$greater= 。
 
 ** 包引用
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     import java.awt.{Color, Font}
     // 重命名成员
     import java.util.{HashMap => JavaHashMap}
     // 隐藏成员
     import java.util.{HashMap => _, _} // 引入了util包的所有成员，但是HashMap被隐藏了
-#+END_EXAMPLE
+#+END_SRC
 
-*注意 1.* 默认情况下，Scala 总会引入 =java.lang._= 、 =scala._= 和
-=Predef._= ，这
-里也能解释，为什么以scala开头的包，在使用时都是省去scala.的。
+*注意 1.* 默认情况下，Scala 总会引入 =java.lang._= 、 =scala._= 和 =Predef._= ，这 里也能解释，为什么以scala开头的包，在使用时都是省去scala.的。
 
 * 数据类型
 
--  Unit：表示无值，和其他语言中void等同。用作不返回任何结果的方法的结果类型。
-   Unit只有一个实例值，写成()；
+-  Unit：表示无值，和其他语言中void等同。用作不返回任何结果的方法的结果类型。Unit只有一个实例值，写成()；
 -  Nothing：Nothing类型在Scala的类层级的最低端；它是任何其他类型的子类型；
 -  Any：Any是所有其他类的超类；
 -  AnyRef：AnyRef类是Scala里所有引用类(reference class)的基类
 
 ** 符号字面量
 
-符号字面量被写成： ='<标识符>= ，这里 =<标识符>=
-可以是任何字母或数字的标识（注意：
-不能以数字开头）。这种字面量被映射成预定义类scala.Symbol的实例。
+符号字面量被写成： ~'<标识符>~ ，这里 =<标识符>= 可以是任何字母或数字的标识（注意：不能以数字开头）。这种字面量被映射成预定义类scala.Symbol的实例。
 
-如： 符号字面量 ='x= 是表达式 =scala.Symbol("x")=
-的简写，符号字面量定义如下：
+如： 符号字面量 ='x= 是表达式 =scala.Symbol("x")= 的简写，符号字面量定义如下：
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     package scala
     final case class Symbol private (name: String) {
         override def toString: String = "'" + name
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** Null值
 
-空值是 scala.Null
-类型。Scala.Null和scala.Nothing是用统一的方式处理Scala面向对
-象类型系统的某些"边界情况"的特殊类型。Null类是null引用对象的类型，它是每个引用
-类（继承自AnyRef的类）的子类。Null不兼容值类型。
+空值是 scala.Null 类型。Scala.Null和scala.Nothing是用统一的方式处理Scala面向对象类型系统的某些"边界情况"的特殊类型。Null类是null引用对象的类型，它是每个引用类（继承自AnyRef的类）的子类。Null不兼容值类型。
 
 * 变量
 
@@ -69,19 +52,15 @@ Scala 内部实现时会使用转义的标志符，比如 =:->= ; 使用
 
 Scala 支持多个变量的声明：
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     val xmax, ymax = 100 // xmax, ymax都声明为100
-#+END_EXAMPLE
+#+END_SRC
 
 * 访问修饰符
 
-Scala
-访问修饰符基本和Java的一样，分别有：private，protected，public。如果没有
-指定访问修饰符符，默认情况下，Scala对象的访问级别都是 public。Scala 中的
-private 限定符，比 Java
-更严格，在嵌套类情况下，外层类甚至不能访问被嵌套类的私有成员。
+Scala 访问修饰符基本和 Java 的一样，分别有：private，protected，public。如果没有指定访问修饰符符，默认情况下，Scala对象的访问级别都是 public。Scala 中的 private 限定符，比 Java 更严格，在嵌套类情况下，外层类甚至不能访问被嵌套类的私有成员。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     class Outer{
         class Inner{
             private def f(){println("f")}
@@ -91,12 +70,11 @@ private 限定符，比 Java
         }
         (new Inner).f() //错误
     }
-#+END_EXAMPLE
+#+END_SRC
 
-在 scala 中，对保护（Protected）成员的访问比 java
-更严格一些。因为它只允许保护 成员在定义了该成员的的类的子类中被访问。
+在 scala 中，对保护（Protected）成员的访问比 java 更严格一些。因为它只允许保护 成员在定义了该成员的的类的子类中被访问。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     package p{
     class Super{
         protected def f() {println("f")}
@@ -110,30 +88,27 @@ private 限定符，比 Java
         (new Super).f() //错误
     }
     }
-#+END_EXAMPLE
+#+END_SRC
 
-Scala中，如果没有指定任何的修饰符，则默认为
-public。这样的成员在任何地方都可以被访问。
+Scala中，如果没有指定任何的修饰符，则默认为 public。这样的成员在任何地方都可以被访问。
 
 ** 作用域保护
 
 Scala中，访问修饰符可以通过使用限定词强调。格式为:
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     private[x]
-#+END_EXAMPLE
+#+END_SRC
 
 或
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     protected[x]
-#+END_EXAMPLE
+#+END_SRC
 
-这里的x指代某个所属的包、类或单例对象。如果写成
-=private[x]=,读作"这个成员除了对
-[...]中的类或[...]中的包中的类及它们的伴生对像可见外，对其它所有类都是private。
+这里的x指代某个所属的包、类或单例对象。如果写成 =private[x]=,读作"这个成员除了对[...]中的类或[...]中的包中的类及它们的伴生对像可见外，对其它所有类都是private。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     package bobsrocckets{
         package navigation{
             private[bobsrockets] class Navigator{
@@ -150,14 +125,11 @@ Scala中，访问修饰符可以通过使用限定词强调。格式为:
             }
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
-上述例子中，类 =Navigator= 被标记为 =private[bobsrockets]=
-就是说这个类对包含在 bobsrockets包里的所有的类和对象可见。
+上述例子中，类 =Navigator= 被标记为 =private[bobsrockets]= 就是说这个类对包含在 bobsrockets包里的所有的类和对象可见。
 
-比如说，从Vehicle对象里对Navigator的访问是被允许的，因为对象Vehicle包含在包
-launch中，而launch包在bobsrockets中，相反，所有在包bobsrockets之外的代码都不能
-访问类Navigator。
+比如说，从Vehicle对象里对Navigator的访问是被允许的，因为对象Vehicle包含在包 launch 中，而 launch 包在 bobsrockets 中，相反，所有在包 bobsrockets 之外的代码都不能访问类 Navigator。
 
 * 运算符
 
@@ -167,12 +139,9 @@ launch中，而launch包在bobsrockets中，相反，所有在包bobsrockets之�
 
 * 函数
 
-Scala 有函数和方法，二者在语义上的区别很小。Scala
-方法是类的一部分，而函数是一个
-对象可以赋值给一个变量。换句话来说在类中定义的函数即是方法。更重要的一点是
-Scala 函数名可以有以下特殊字符： =**+, ++, ~, &,-, –- , \, /, := 等。
+Scala 有函数和方法，二者在语义上的区别很小。Scala 方法是类的一部分，而函数是一个对象可以赋值给一个变量。换句话来说在类中定义的函数即是方法。更重要的一点是 Scala 函数名可以有以下特殊字符： =**+, ++, ~, &,-, –- , \, /, := 等。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object add{
         def addInt( a:Int, b:Int ) : Int = {
             var sum:Int = 0
@@ -180,16 +149,15 @@ Scala 函数名可以有以下特殊字符： =**+, ++, ~, &,-, –- , \, /, := 
            return sum
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** 函数声明
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     def functionName ([参数列表]) : [return type]
-#+END_EXAMPLE
+#+END_SRC
 
-如果你不写等于号和方法主体，那么方法会被隐式声明为"抽象(abstract)"，包含它的类型
-于是也是一个抽象类型。
+如果你不写等于号和方法主体，那么方法会被隐式声明为"抽象(abstract)"，包含它的类型于是也是一个抽象类型。
 
 ** call-by-name
 
@@ -198,11 +166,9 @@ Scala的解释器在解析函数参数(function arguments)时有两种方式：
 -  传值调用（call-by-value）：先计算参数表达式的值，再应用到函数内部；
 -  传名调用（call-by-name）：将未计算的参数表达式直接应用到函数内部
 
-在进入函数内部前，传值调用方式就已经将参数表达式的值计算完毕，而传名调用是在函数
-内部进行参数表达式的值计算的。这就造成了一种现象，每次使用传名调用时，解释器都
-会计算一次表达式的值。
+在进入函数内部前，传值调用方式就已经将参数表达式的值计算完毕，而传名调用是在函数内部进行参数表达式的值计算的。这就造成了一种现象，每次使用传名调用时，解释器都会计算一次表达式的值。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
         def main(args: Array[String]) {
             delayed(time());
@@ -217,7 +183,7 @@ Scala的解释器在解析函数参数(function arguments)时有两种方式：
             t
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** 可变参数
 
@@ -225,9 +191,7 @@ Scala的解释器在解析函数参数(function arguments)时有两种方式：
 
 ** 偏函数
 
-Scala
-偏应用函数是一种表达式，你不需要提供函数需要的所有参数，只需要提供部分，
-或不提供所需参数。
+Scala 偏应用函数是一种表达式，你不需要提供函数需要的所有参数，只需要提供部分，或不提供所需参数。
 
 见示例PartialFunc.scala
 
@@ -237,16 +201,15 @@ Scala
 
 ** 匿名函数
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     var inc = (x:Int) => x+1
     var mul = (x: Int, y: Int) => x*y
     var userDir = () => { System.getProperty("user.dir") }
-#+END_EXAMPLE
+#+END_SRC
 
 ** Currying Function
 
-柯里化(Currying)指的是将原来接受两个参数的函数变成新的接受一个参数的函数的过程。
-新的函数返回一个以原有第二个参数为参数的函数。
+柯里化(Currying)指的是将原来接受两个参数的函数变成新的接受一个参数的函数的过程。新的函数返回一个以原有第二个参数为参数的函数。
 
 见示例CurryingFunc.scala
 
@@ -256,11 +219,9 @@ Scala
 
 ** 格式化字符串
 
-String 类中你可以使用 printf() 方法来格式化字符串并输出，String format()
-方法可 以返回 String 对象而不是 PrintStream 对象。以下实例演示了
-printf() 方法的使用：
+String 类中你可以使用 printf() 方法来格式化字符串并输出，String format() 方法可 以返回 String 对象而不是 PrintStream 对象。以下实例演示了 printf() 方法的使用：
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
         def main(args: Array[String]) {
             var floatVar = 12.456
@@ -272,7 +233,7 @@ printf() 方法的使用：
             println(fs)
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 见示例FormatString.scala
 
@@ -280,30 +241,23 @@ printf() 方法的使用：
 
 ** 多维数组
 
-多维数组一个数组中的值可以是另一个数组，另一个数组的值也可以是一个数组。矩阵与
-表格是我们常见的二维数组。
+多维数组一个数组中的值可以是另一个数组，另一个数组的值也可以是一个数组。矩阵与表格是我们常见的二维数组。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     var myMatrix = ofDim[Int](3,3)
-#+END_EXAMPLE
+#+END_SRC
 
 见示例DimArray.scala
 
 * Collection
 
-Scala
-集合分为可变的和不可变的集合。可变集合可以在适当的地方被更新或扩展。这意味
-着你可以修改，添加，移除一个集合的元素。而不可变集合类，相比之下，永远不会改变。
-不过，你仍然可以模拟添加，移除或更新操作。但是这些操作将在每一种情况下都返回一个
-新的集合，同时使原来的集合不发生改变。
+Scala 集合分为可变的和不可变的集合。可变集合可以在适当的地方被更新或扩展。这意味着你可以修改，添加，移除一个集合的元素。而不可变集合类，相比之下，永远不会改变。不过，你仍然可以模拟添加，移除或更新操作。但是这些操作将在每一种情况下都返回一个新的集合，同时使原来的集合不发生改变。
 
 ** List
 
-Scala
-列表类似于数组，它们所有元素的类型都相同，但是它们也有所不同：列表是不可变
-的，值一旦被定义了就不能改变，其次列表具有递归的结构（也就是链接表结构）而数组不是。
+Scala 列表类似于数组，它们所有元素的类型都相同，但是它们也有所不同：列表是不可变的，值一旦被定义了就不能改变，其次列表具有递归的结构（也就是链接表结构）而数组不是。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     // 空列表
     val empty List[Nothing] = List()
 
@@ -314,7 +268,7 @@ Scala
             List(0, 1, 0),
             List(0, 0, 1)
         )
-#+END_EXAMPLE
+#+END_SRC
 
 *** 基本操作
 
@@ -326,35 +280,24 @@ Scala列表有三个基本操作：
 
 *** 链接列表
 
-你可以使用 =:::= 运算符或 =List.:::()= 方法或 =**List.concat()=
-方法来连接两个或多个 列表，示例见ConcatList.scala
+你可以使用 =:::= 运算符或 =List.:::()= 方法或 =**List.concat()= 方法来连接两个或多个 列表，示例见ConcatList.scala
 
 *** List.tabulate()
 
-List.tabulate()
-方法是通过给定的函数来创建列表。方法的第一个参数为元素的数量，
-可以是二维的，第二个参数为指定的函数，我们通过指定的函数计算结果并返回值插入到列
-表中，起始值为0。
+List.tabulate() 方法是通过给定的函数来创建列表。方法的第一个参数为元素的数量，可以是二维的，第二个参数为指定的函数，我们通过指定的函数计算结果并返回值插入到列表中，起始值为0。
 
 ** Set
 
-Scala Set(集合)是没有重复的对象集合，所有的元素都是唯一的。Scala
-集合分为可变的和 不可变的集合。默认情况下，Scala
-使用的是不可变集合，如果你想使用可变集合，需要引用
-=scala.collection.mutable.Set= 包。默认引用
-=scala.collection.immutable.Set= ，不可 变集合实例如下：
+Scala Set(集合)是没有重复的对象集合，所有的元素都是唯一的。Scala 集合分为可变的和 不可变的集合。默认情况下，Scala 使用的是不可变集合，如果你想使用可变集合，需要引用 =scala.collection.mutable.Set= 包。默认引用 =scala.collection.immutable.Set= ，不可 变集合实例如下：
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     val set = Set(1,2,3)
     println(set.getClass.getName) // 
     println(set.exists(_ % 2 == 0)) //true
     println(set.drop(1)) //Set(2,3)
-#+END_EXAMPLE
+#+END_SRC
 
-*注意 2.*:
-虽然可变Set和不可变Set都有添加或删除元素的操作，但是有一个非常大的
-差别。对不可变Set进行操作，会产生一个新的set，原来的set并没有改变，这与List一样。
-而对可变Set进行操作，改变的是该Set本身，与ListBuffer类似。
+*注意 2.*: 虽然可变Set和不可变Set都有添加或删除元素的操作，但是有一个非常大的差别。对不可变Set进行操作，会产生一个新的set，原来的set并没有改变，这与List一样。而对可变Set进行操作，改变的是该Set本身，与ListBuffer类似。
 
 *** 基本操作
 
@@ -366,8 +309,7 @@ Scala集合有三个基本操作：
 
 *** 连接
 
-你可以使用 =++= 运算符或 =Set.++()=
-方法来连接两个集合。如果元素有重复的就会移除 重复的元素。
+你可以使用 =++= 运算符或 =Set.++()= 方法来连接两个集合。如果元素有重复的就会移除 重复的元素。
 
 *** 交集
 
@@ -375,21 +317,15 @@ Scala集合有三个基本操作：
 
 ** Map
 
-Map
-有两种类型，可变与不可变，区别在于可变对象可以修改它，而不可变对象不可以。默
-认情况下 Scala 使用不可变 Map。如果你需要使用可变集合，你需要显式的引入
-=import scala.collection.mutable.Map= 类。在 Scala
-中你可以同时使用可变与不可变 Map， 不可变的直接使用 Map，可变的使用
-mutable.Map。
+Map 有两种类型，可变与不可变，区别在于可变对象可以修改它，而不可变对象不可以。默认情况下 Scala 使用不可变 Map。如果你需要使用可变集合，你需要显式的引入 =import scala.collection.mutable.Map= 类。在 Scala 中你可以同时使用可变与不可变 Map， 不可变的直接使用 Map，可变的使用 mutable.Map。
 
 *** 合并
 
-你可以使用 =++= 运算符或 =Map.++()= 方法来连接两个 Map，Map
-合并时会移除重复的 key。
+你可以使用 =++= 运算符或 =Map.++()= 方法来连接两个 Map，Map 合并时会移除重复的 key。
 
 *** 输出Map的keys和values
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
         def main(args: Array[String]) {
             val sites = Map("runoob'' -> ‘‘http://www.runoob.com",
@@ -400,15 +336,13 @@ mutable.Map。
                                 println('' Value = '' + sites(i) )}
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** 元组
 
-与列表一样，元组也是不可变的，但与列表不同的是元组可以包含不同类型的元素。目前
-Scala 支持的元组最大长度为
-22。对于更大长度你可以使用集合，或者扩展元组。
+与列表一样，元组也是不可变的，但与列表不同的是元组可以包含不同类型的元素。目前 Scala 支持的元组最大长度为 22。对于更大长度你可以使用集合，或者扩展元组。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
         def main(args: Array[String]) {
           val t = (4,3,2,1)
@@ -416,30 +350,28 @@ Scala 支持的元组最大长度为
           println( "元素之和为: " + sum ) 
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 *** 迭代
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
         def main(args: Array[String]) {
           val t = (4,3,2,1)
           t.productIterator.foreach{ i =>println("Value = " + i )}
         }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** Option
 
-Scala Option(选项)类型用来表示一个值是可选的（有值或无值)。Option[T]
-是一个类型为 T 的可选值的容器： 如果值存在， Option[T] 就是一个 Some[T]
-，如果不存在， Option[T] 就是对象 None 。
+Scala Option(选项)类型用来表示一个值是可选的（有值或无值)。Option[T] 是一个类型为 T 的可选值的容器： 如果值存在， Option[T] 就是一个 Some[T] ，如果不存在， Option[T] 就是对象 None 。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     val myMap: Map[String, String] = Map("key1" -> "value")
     val value1: Option[String] = myMap.get("key1")
     val value2: Option[String] = myMap.get("key2")
-#+END_EXAMPLE
+#+END_SRC
 
 参见示例OptionTest.scala
 
@@ -459,28 +391,19 @@ Scala继承一个基类跟Java很相似, 但我们需要注意以下几点：
 
 ** 单例对象
 
-在 Scala 中，是没有 static
-这个东西的，但是它也为我们提供了单例模式的实现方法， 那就是使用关键字
-object。Scala 中使用单例模式时，除了定义的类之外，还要定义 一个同名的
-object 对象，它和类的区别是，object对象不能带参数。
+在 Scala 中，是没有 static 这个东西的，但是它也为我们提供了单例模式的实现方法， 那就是使用关键字 object。Scala 中使用单例模式时，除了定义的类之外，还要定义一个同名的 object 对象，它和类的区别是，object对象不能带参数。
 
-当单例对象与某个类共享同一个名称时，他被称作是这个类的伴生对象：companion
-object。你必须在同一个源文件里定义类和它的伴生对象。类被称为是这个单例对象的
-伴生类：companion class。类和它的伴生对象可以互相访问其私有成员。
+当单例对象与某个类共享同一个名称时，他被称作是这个类的伴生对象：companion object。你必须在同一个源文件里定义类和它的伴生对象。类被称为是这个单例对象的伴生类：companion class。类和它的伴生对象可以互相访问其私有成员。
 
 见示例CompanionClass.scala
 
 * Trait
 
-Scala Trait(特征) 相当于 Java
-的接口，实际上它比接口还功能强大。与接口不同的是，
-它还可以定义属性和方法的实现。一般情况下Scala的类只能够继承单一父类，但是如果是
-Trait(特征) 的话就可以继承多个，从结果来看就是实现了多重继承。
+Scala Trait(特征) 相当于 Java 的接口，实际上它比接口还功能强大。与接口不同的是，它还可以定义属性和方法的实现。一般情况下Scala的类只能够继承单一父类，但是如果是 Trait(特征) 的话就可以继承多个，从结果来看就是实现了多重继承。
 
 ** 特征构造顺序
 
-特征也可以有构造器，由字段的初始化和其他特征体中的语句构成。这些语句在任何混入
-该特征的对象在构造是都会被执行。
+特征也可以有构造器，由字段的初始化和其他特征体中的语句构成。这些语句在任何混入该特征的对象在构造是都会被执行。
 
 构造器的执行顺序：
 
@@ -499,10 +422,9 @@ Trait(特征) 的话就可以继承多个，从结果来看就是实现了多重
 
 ** 使用样例类
 
-使用了case关键字的类定义就是就是样例类(case
-classes)，样例类是种特殊的类， 经过优化以用于模式匹配。
+使用了case关键字的类定义就是就是样例类(case classes)，样例类是种特殊的类， 经过优化以用于模式匹配。
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
       def main(args: Array[String]) {
         val alice = new Person("Alice", 25)
@@ -519,7 +441,7 @@ classes)，样例类是种特殊的类， 经过优化以用于模式匹配。
       // 样例类 
       case class Person(name: String, age: Int)
     }
-#+END_EXAMPLE
+#+END_SRC
 
 在声明样例类时，下面的过程自动发生了：
 
@@ -536,28 +458,19 @@ classes)，样例类是种特殊的类， 经过优化以用于模式匹配。
 
 ** 捕获异常
 
-异常捕捉的机制与其他语言中一样，如果有异常发生，catch字句是按次序捕捉的。因此，
-在catch字句中，越具体的异常越要靠前，越普遍的异常越靠后。
-如果抛出的异常不在catch 字句中，该异常则无法处理，会被升级到调用者处。
+异常捕捉的机制与其他语言中一样，如果有异常发生，catch字句是按次序捕捉的。因此，在catch字句中，越具体的异常越要靠前，越普遍的异常越靠后。如果抛出的异常不在catch 字句中，该异常则无法处理，会被升级到调用者处。
 
 * Extractor
 
-提取器是从传递给它的对象中提取出构造该对象的参数。Scala
-标准库包含了一些预定义的 提取器，我们会大致的了解一下它们。Scala
-提取器是一个带有unapply方法的对象。unapply
-方法算是apply方法的反向操作：unapply接受一个对象，然后从对象中提取值，提取的值通
-常是用来构造该对象的值。
+提取器是从传递给它的对象中提取出构造该对象的参数。Scala 标准库包含了一些预定义的 提取器，我们会大致的了解一下它们。Scala 提取器是一个带有unapply方法的对象。unapply 方法算是apply方法的反向操作：unapply接受一个对象，然后从对象中提取值，提取的值通常是用来构造该对象的值。
 
 ** 提取器与模式匹配
 
-在我们实例化一个类的时，可以带上0个或者多个的参数，编译器在实例化的时会调用
-apply 方法。我们可以在类和对象中都定义 apply 方法。
+在我们实例化一个类的时，可以带上0个或者多个的参数，编译器在实例化的时会调用 apply 方法。我们可以在类和对象中都定义 apply 方法。
 
-就像我们之前提到过的，unapply 用于提取我们指定查找的值，它与 apply
-的操作相反。 当我们在提取器对象中使用 match 语句是，unapply
-将自动执行，如下所示：
+就像我们之前提到过的，unapply 用于提取我们指定查找的值，它与 apply 的操作相反。 当我们在提取器对象中使用 match 语句是，unapply 将自动执行，如下所示：
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     object Test {
       def main(args: Array[String]) {
         val x = Test(5)
@@ -571,11 +484,11 @@ apply 方法。我们可以在类和对象中都定义 apply 方法。
       def apply(x: Int) = x*2
       def unapply(z: Int): Option[Int] = if (z%2==0) Some(z/2) else None
     }
-#+END_EXAMPLE
+#+END_SRC
 
 * IO
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     import java.io._
 
     object Test {
@@ -585,11 +498,11 @@ apply 方法。我们可以在类和对象中都定义 apply 方法。
         writer.close()
       }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 ** 文件中读取
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC scala
     import scala.io.Source
     object Test {
       def main(args: Array[String]) {
@@ -599,7 +512,7 @@ apply 方法。我们可以在类和对象中都定义 apply 方法。
           }
       }
     }
-#+END_EXAMPLE
+#+END_SRC
 
 * 参考
 

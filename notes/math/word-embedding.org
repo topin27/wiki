@@ -1,14 +1,14 @@
 #+TITLE: Word Embedding
 
-自然语言处理中，单词并不能直接输入模型进行处理，因此需要将单词转换为词向量输入模型进行计算，但是词向量的转换方式需要不仅考虑词的代表性（比如one-hot编码），还需要考虑词的语义信息（相近词的词向量距离较近，比如 word2vec ），因此 [[https://en.wikipedia.org/wiki/Word_embedding][word embedding]] 即是将词转换为包含尽可能多的语义信息的向量的过程。
+自然语言处理中，单词并不能直接输入模型进行处理，因此需要将单词转换为词向量输入模型进行计算，但是词向量的转换方式需要不仅考虑词的代表性（比如 one-hot 编码），还需要考虑词的语义信息（相近词的词向量距离较近，比如 word2vec ），因此 [[https://en.wikipedia.org/wiki/Word_embedding][word embedding]] 即是将词转换为包含尽可能多的语义信息的向量的过程。
 
 将单词表示为词向量后，有多种方式可以用来通过词向量来表示整个句子甚至整篇文章：
 
 - Word Centroid Vector :: 将所有词向量加权平均，最终得到的向量就是整个文本在词向量空间中的质心；
 - Continuous Bag of Words (CBOW) :: 将定长窗口内的词向量首尾连接，便构成了这一窗口内文本的向量表示，常用方案之一；
-- Word Mover's Distance (WMD) :: 将词间的相似度使用 word2vec 向量间的欧式距离衡量，句子间的相似度通过求解经典的 transportation problem 优化问题得到。缺点是：对句子的长度敏感，长度相差很大 的句子之间进行计算时开销较大；其次整体的计算开销也较大。
+- Word Mover's Distance (WMD) :: 将词间的相似度使用 word2vec 向量间的欧式距离衡量，句子间的相似度通过求解经典的 transportation problem 优化问题得到。缺点是：对句子的长度敏感，长度相差很大的句子之间进行计算时开销较大；其次整体的计算开销也较大。
 
-* GloVe
+* GloVe (GLObal VEctor)
 
 ** 参考
 
