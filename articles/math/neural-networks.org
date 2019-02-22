@@ -2,9 +2,9 @@
 
 ** M-P神经元模型
 
-典型的[[https://en.wikipedia.org/wiki/Artificial_neuron][M-P神经元模型]] 的输出为：[y=f(\sum/{i=1}\^{n}{w/{i}x\_{i}-\theta})] 其中(\theta)为阈值，(x\_i)为第i个神经元的输入，(w\_i)为第i个神经元的输入的权重。通常也会表示为(z=\sum{w_{i}x_{i}+b})且(y=\sigma{(z)})
+典型的[[https://en.wikipedia.org/wiki/Artificial_neuron][M-P神经元模型]] 的输出为：[y=f(\sum/{i=1}^{n}{w/{i}x_{i}-\theta})] 其中(\theta)为阈值，(x_i)为第i个神经元的输入，(w_i)为第i个神经元的输入的权重。通常也会表示为(z=\sum{w_{i}x_{i}+b})且(y=\sigma{(z)})
 
-激活函数f可以通过(\sum/{i=1}\^{n}{w/{i}x\_{i}})与阈值比较，如果大于阈值则输出1，否则输出0（或者-1）。理想的激活函数是[[https://en.wikipedia.org/wiki/Sign_function][阶跃函数]] ，但是由于阶跃函数不连续且不光滑，因此实际上会用[[https://en.wikipedia.org/wiki/Sigmoid_function][sigmoid函数]] 作为激活函数。
+激活函数f可以通过(\sum/{i=1}^{n}{w/{i}x_{i}})与阈值比较，如果大于阈值则输出1，否则输出0（或者-1）。理想的激活函数是[[https://en.wikipedia.org/wiki/Sign_function][阶跃函数]] ，但是由于阶跃函数不连续且不光滑，因此实际上会用[[https://en.wikipedia.org/wiki/Sigmoid_function][sigmoid函数]] 作为激活函数。
 
 多个神经元组合就得到了神经网络。
 
@@ -12,9 +12,9 @@
 
 [[https://en.wikipedia.org/wiki/Perceptron][感知机]] 由两层神经元组成，第一层神经元接收输入，输出神经元是M-P神经元，可实现与、或、非等运算，但是某些简单的操作却无法实现（比如异或）。
 
-感知机的学习过程（将(\theta)作为({x\_0}=-1)的权重(w\_0)）为：
-[w\_{i}\leftarrow{w_{i}+\triangle{w_i}}]
-[\triangle{w_i}=\eta(y-\hat{y})x\_i] 其中(\eta\in(0,1))为学习率。对于
+感知机的学习过程（将(\theta)作为({x_0}=-1)的权重(w_0)）为：
+[w_{i}\leftarrow{w_{i}+\triangle{w_i}}]
+[\triangle{w_i}=\eta(y-\hat{y})x_i] 其中(\eta\in(0,1))为学习率。对于
 *线性可分* 的问题，感知机的学习过程一定会收敛。
 
 ** 多层神经网络
@@ -39,9 +39,9 @@ DNN也是一种典型的前馈神经网络，单单从结构上来看，也可�
 *** 经典RNN
 
 假设时间序列(t)从1到(\tau)，对于其中任意一个序列(t)，(x^{{(t)})为当前序列样本的输入，隐藏状态(h}{(t)})由(x^{{(t)})和(h}{(t-1)})共同决定：
-[h\^{(t)}=\sigma{(z^{(t)})}=\sigma{(Ux^{(t)}+Wh^{(t)}+b)}]
+[h^{(t)}=\sigma{(z^{(t)})}=\sigma{(Ux^{(t)}+Wh^{(t)}+b)}]
 其中(\sigma)通常为sigmoid激活函数，对应的输出为： [o^{{(t)}=Vh}{(t)}+c]
-最终在序列$t$的预测输出为： [\hat{y}\^{(t)}=\sigma{(o^{(t)})}]
+最终在序列$t$的预测输出为： [\hat{y}^{(t)}=\sigma{(o^{(t)})}]
 而这里的激活函数一般为softmax。整个过程中的(U,V,W,b)在整个RNN网络中共享（相同），其可以理解每一步都在做相同的事，只是输入不同，这样大大降低了网络中要学习的参数。
 
 如果将感知机比喻为二维平面，那么RNN则可以理解为三位平面，从三位平面的角度看（时间序列），相邻二维平面之间并非独立，而是有所关系。
@@ -78,18 +78,18 @@ DNN也是一种典型的前馈神经网络，单单从结构上来看，也可�
 
 *** LSTM
 
-传统RNN的问题在于当前的输出(h\_{t})和前一隐藏状态(h\_{t-1})相关，而和(h\_{t-2})间接相关...如此相关性递减，而在有些领域（比如NLP）中，当前输出和前面很远的隐藏状态的输出相关，[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/][这篇文章]] 中举了一个例子：I grew up in France... I speak fluent French\_。在这里，French位置根据前面两个单词的预测可能是任何语言，但在前方很远的地方却已经给出了很明显的“提示”。
+传统RNN的问题在于当前的输出(h_{t})和前一隐藏状态(h_{t-1})相关，而和(h_{t-2})间接相关...如此相关性递减，而在有些领域（比如NLP）中，当前输出和前面很远的隐藏状态的输出相关，[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/][这篇文章]] 中举了一个例子：I grew up in France... I speak fluent French_。在这里，French位置根据前面两个单词的预测可能是任何语言，但在前方很远的地方却已经给出了很明显的“提示”。
 
 为了解决这样的问题，[[http://www.bioinf.jku.at/publications/older/2604.pdf][Hochreiter & Schmidhuber (1997)]] 提出了[[https://en.wikipedia.org/wiki/Long_short-term_memory][LSTM]] ，其是经典RNN的变种之一。RNN在处理(x^{{(t)})和(h}(t-1))时，使用的是普通的激活函数sigmoid，而LSTM改造了这一块，包含更复杂的结构，简单说来就是在新一时间序列轮时，决定哪些更新哪些不更新。
 
-详细的说来，在RNN中的(\sigma{(z^{t})})这一块，LSTM替换成了[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png]] ，同时不同于RNN，LSTM在隐藏状态(h\^{(t)})的基础上还增加了一个 *细胞状态* (C\^{(t)})。首先，在[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-focus-f.png]] 这里： [f^{{(t)}=\sigma{(W_{f}\cdot{[h^{(t-1)},x^{(t)}]}+b_{f})}] 该函数的输出值（0～1）决定(C}{(t-1)})中有多少保留，有多少丢弃，保留的保留多少，丢弃的丢弃多少。然后[[https://upload-images.jianshu.io/upload_images/42741-7fa07e640593f930.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700][input gate]] 这里由两部分决定新的信息（(h^{{(t-1)})和(x}{(t)})）中有多少加入到新的细胞状态(C^{{(t)})中：
+详细的说来，在RNN中的(\sigma{(z^{t})})这一块，LSTM替换成了[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-chain.png]] ，同时不同于RNN，LSTM在隐藏状态(h^{(t)})的基础上还增加了一个 *细胞状态* (C^{(t)})。首先，在[[http://colah.github.io/posts/2015-08-Understanding-LSTMs/img/LSTM3-focus-f.png]] 这里： [f^{{(t)}=\sigma{(W_{f}\cdot{[h^{(t-1)},x^{(t)}]}+b_{f})}] 该函数的输出值（0～1）决定(C}{(t-1)})中有多少保留，有多少丢弃，保留的保留多少，丢弃的丢弃多少。然后[[https://upload-images.jianshu.io/upload_images/42741-7fa07e640593f930.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700][input gate]] 这里由两部分决定新的信息（(h^{{(t-1)})和(x}{(t)})）中有多少加入到新的细胞状态(C^{{(t)})中：
 [i}{(t)}=\sigma{(W_{i}\cdot{[h^{(t-1)},x^{(t)}]}+b_{i})}]
-[\hat{C}^{{(t)}=tanh(W\_{C}\cdot{[h^{(t-1)},x^{(t)}]}+b\_{C})]
+[\hat{C}^{{(t)}=tanh(W_{C}\cdot{[h^{(t-1)},x^{(t)}]}+b_{C})]
 此时可以将(C}{(t-1)})更新为(C^{{(t)})：
 [C}{(t)}=f^{{(t)}/C^{{(t-1)}+i}{(t)}/\hat{C}}{(t)}]
 完成后，会有[[https://upload-images.jianshu.io/upload_images/42741-4c9186bf786063d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/700][output gate]] 来决定细胞状态的什么特征信息可以输出：
 [o^{{(t)}=\sigma{(W_{o}\cdot{[h^{(t-1)},x^{(t)}]}+b_{o})}]
-[h}{(t)}=o\^{(t)}*tanh(C\^{(t)})]
+[h}{(t)}=o^{(t)}*tanh(C^{(t)})]
 
 1. Bi-LSTM
 
@@ -97,7 +97,7 @@ DNN也是一种典型的前馈神经网络，单单从结构上来看，也可�
 
 *** GRU
 
-和LSTM不同的是，[[https://en.wikipedia.org/wiki/Gated_recurrent_unit][GRU]] 只有两个gates：reset gate和update gate，虽然gate少了一个，但是GRU复杂性相对较低，并且性能上和LSTM差距不大。其将LSTM上的input gate和forget gate融盒成一个update gate，update gate决定当前(x\_t)对整体意思是否重要，如果不重要，就将当前词一定程度的忽略，直接将(h^{{(t-1)})传递给(h}{(t)})，reset gate则用于判断上一隐层单元(h^{{(t-1)})对当前词(x}{(t)})的影响力大小，如果影响力较小，则尽量从当前词(x\^{(t)})开始表述意思。
+和LSTM不同的是，[[https://en.wikipedia.org/wiki/Gated_recurrent_unit][GRU]] 只有两个gates：reset gate和update gate，虽然gate少了一个，但是GRU复杂性相对较低，并且性能上和LSTM差距不大。其将LSTM上的input gate和forget gate融盒成一个update gate，update gate决定当前(x_t)对整体意思是否重要，如果不重要，就将当前词一定程度的忽略，直接将(h^{{(t-1)})传递给(h}{(t)})，reset gate则用于判断上一隐层单元(h^{{(t-1)})对当前词(x}{(t)})的影响力大小，如果影响力较小，则尽量从当前词(x^{(t)})开始表述意思。
 
 1. Bi-GRU
 
@@ -106,7 +106,7 @@ DNN也是一种典型的前馈神经网络，单单从结构上来看，也可�
 *** Attention机制
 
 在N vs.
-M版本的RNN中，我们需要将输入encode成单个的向量(c)，因此(c)中会包含语句中所有的信息，因此其长度就是模型的性能瓶颈，而Attention机制就是在decode的隐层中的每一层都加入不同的(c\_i)，因此在decode时，其输出不仅与前一隐层的输出有关系，还与encode的时候计算的(c\_i)有关系。
+M版本的RNN中，我们需要将输入encode成单个的向量(c)，因此(c)中会包含语句中所有的信息，因此其长度就是模型的性能瓶颈，而Attention机制就是在decode的隐层中的每一层都加入不同的(c_i)，因此在decode时，其输出不仅与前一隐层的输出有关系，还与encode的时候计算的(c_i)有关系。
 
 因此可以说，attention机制的实现是通过保留encode时的中间输出结果，然后训练一个模型来对这些输出结果进行选择性的学习并且在decode时将数输出序列与之关联的过程。
 
