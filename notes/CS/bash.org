@@ -1,10 +1,13 @@
+#+TITLE: Notes about bash
+
 * snippets
 
 ** 删除环境变量
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC bash
+
     unset <ENV-VARS>
-#+END_EXAMPLE
+#+END_SRC
 
 ** 单引号与双引号的区别
 
@@ -18,7 +21,7 @@ bash中，双引号表示其中的bash变量会被expand，而单引号则反之
 
 ** 命令编辑
 
-使用=beforeafter\^=可以对上一条命令的文本进行替换并重新执行命令：
+使用 =beforeafter\^= 可以对上一条命令的文本进行替换并重新执行命令：
 
 #+BEGIN_EXAMPLE
     eho hello world

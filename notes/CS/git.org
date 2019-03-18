@@ -1,5 +1,66 @@
---------------
+#+TITLE: git
 
-* Cheat sheet
+* 打包
 
--  导出并打包：=git archive 8996b47 | gzip > ../git-1.4.0.tar.gz=
+- 导出并打包： =git archive 8996b47 | gzip > ../nb.zip= 或者 =git archive --format=zip head > nb.zip=
+
+* 提交
+
+- 增加提交且不会产生新的提交记录： =git commit -C head -a -amend=
+
+* 撤销修改
+
+- 撤销尚未提交的修改： =git checkout head todo.txt=
+- 撤销所有文件： =git checkout head .=
+- 撤销提交
+  - 反转提交但是不提交： =git revert --no-commit head=
+  - 复位到特定的版本： =git reset --hard=
+
+* 分支
+
+- 基于某次提交、分支或标签创建新分支： =git branch <branch-name> 2d9a8c=
+- 合并分支
+  - 普通合并
+    - 合并并提交： =git merge <branch-name>=
+  - 合并不提交： =git merge --no-commit=
+  - 压合合并
+    - 压合合并并提交： =git merge --squash <branch-name>=
+    - 压合合并但是不提交： =git merge --squash --no-commit <branch-name>=
+  - 拣选合并： =git cherry-pick --no-commit 2d9a8c=
+- 重命名分支
+  - =git branch -m <branch-name> <new-name>=
+  - =git branch -M <branch-name> <new-name>= ：冲突名字直接覆盖
+- 删除分支
+  - =git branch -d <branch-name>=
+  - =git branch -D <branch-name>= ：即使该分支没有合并也会删除
+- 删除远程中已经不存在的分支： =git remote prune origin=
+
+* 冲突
+
+- 冲突很少时：直接编辑冲突文件然后提交
+- 冲突很多： =git merge tool=
+
+* 标签
+
+- 创建标签
+
+  - 为 =branch-name= 分支的最后一次提交创建标签： =git tag <tag-name> <branch-name>=
+  - 为某次历史提交创建标签： =git tag <tag-name> 2d9a8c=
+
+- 切换到标签： =git checkout v1.1=
+- 由标签创建分支： =git branch <branch-name> <tag-name>= 或 =git checkout -b <branch-name> <tag-name>=
+- 删除标签： =git tag -d <tag-name>=
+
+* 查看状态
+
+- 查看每个分支最后一次的提交： =git branch -v=
+
+* 别名
+
+- 添加远程版本库的别名： =git remote add <别名> <远程主机的URL>=
+- 删除远程库的别名和分支： =git remote rm <别名>=
+
+* 获取
+
+- 获取但是不合并： =git fetch <remote> <branch>=
+- 获取并合并： =git pull <remote> <branch>=

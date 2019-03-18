@@ -1,0 +1,25 @@
+#+TITLE: LaTeX 相关速记
+
+* 符号
+
+| 符号        | 标记      | 符号      | 标记    | 符号     | 标记   |
+|-------------+-----------+-----------+---------+----------+--------|
+| $\approx$   | \approx   | $\%$      | \%      | $\eta$   | \eta   |
+| $\times$    | \times    | $\cdot$   | \cdot   |          |        |
+
+* 条件操作符
+
+$$f(x)=\begin{cases}
+    \frac{x^2-x}{x},& \text{if } x\geq 1\\
+    0,              & \text{otherwise}
+\end{cases}
+$$
+
+对应的 latex 代码：
+
+#+BEGIN_SRC latex
+    f(x)=\begin{cases}
+        \frac{x^2-x}{x},& \text{if } x\geq 1\\
+        0,              & \text{otherwise}
+    \end{cases}
+#+END_SRC

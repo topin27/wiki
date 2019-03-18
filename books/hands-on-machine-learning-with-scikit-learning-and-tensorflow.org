@@ -1,0 +1,375 @@
+#+TITLE: Notes about "Hands-on Machine Learning with Scikit-learn & Tensorflow"
+
+* End-to-End Machine Learning Project
+
+通常的步骤 checklist:
+
+- Frame the problem and look at the big picture
+- Get the data
+- Explore the data to gain insights
+- Prepare the data to better expose the underlying data patterns to
+  Machine Learning algorithms
+- Explore many different models and combine them into a great solution
+- Present your solution
+- Launch, monitor, and maintain your system.
+
+** Frame the problem and look at the picture
+
+*** 确定问题
+
+最开始的是需要确定问题：模型在当前整个系统或者任务中充当一个什么样的角色；在系统中处于一个什么样的位置；当前的解决方案是什么，有什么样的问题，效果如何。确定了这些问题之后，自然就形成了问题解决的整体框架（监督/非监督、批量学习/在线学习/强化学习、分类/回归等）。
+
+*** 选择性能指标
+
+如果是分类问题，如果是二分类且数据集平衡，会考虑传统的 Accuacy, Precision, F1 等指标，如果数据非平衡，则 AUC, ROC 等指标，进一步的，如果数据非平衡还是多分类，则考虑混淆矩阵等指标。
+
+而对于回归问题，常见的指标是 /Root Mean Square Error (RMSE)/ ：$$\text{RMSE}(X,h)=\sqrt{\frac{1}{m}\sum_{i=1}^m(h(x^{(i)})-y^{(i)})^2}$$
+
+或者 /Mean Absolute Error (MAE)/ ：$$\text{MAE}(X,h)=\frac{1}{m}\sum_{i=1}^m{\lvert}h(x^{(i)})-y^{(i)}\rvert$$
+
+*** 检验假设
+
+建模时，我们通常都会做出很多假设（比如iid），但是在建模之前就对这些假设的可行性以及必要性进行确定。比如，通常价格预测会是一个回归问题，但是如果系统中接受模型输出的下一个模块其实也是将模型预测出的输出转换成了"便宜"、"普通"、"昂贵"三个类别，那么将该问题看作是回归问题就非常不明智了，这中间会损失一些信息，并且下游系统不太关心预测的结果是否精准，只关心类别是否正确。
+
+** Get the Data
+
+*** 大概的观察数据
+
+拿到数据并加载后，使用 =pandas.DataFrame.info()= 对数据进行初步的观察：总共有多少样本量、每个属性的类型、有多少缺失等。这涉及到后续预处理需要进行哪些操作。对于数字类型属性，使用 =pandas.DataFrame.describe()= 对其统计信息进行一个大致的汇总观察。最后，再使用各种图表进行直观的观察。
+
+*** 创建测试集
+
+测试集的重要性无需再提，也不用说训练前不要观察训练集的话题，但是一个经常忽略的问题是多次训练后的信息泄漏：
+
+#+BEGIN_EXAMPLE
+    想象这样的一个场景，数据被一起保存在一个文件夹下，每次训练的时候都重新随机切分数据为训练集和测试集，随后使用训练集来进行模型训练，测试集来进行模型的效果评估。
+#+END_EXAMPLE
+
+大致看来，这样做没有什么问题，每一次模型训练时都使用 =train_test_split()= 保留了测试集进行模型的评估。但是这后面有一个存在着测试数据信息泄漏的致命缺陷：每一次的重新训练，都会重新随机切分训练集和测试集，每一次的测试集都不相同，随着训练次数的增加，最终我们还是得到了测试集的信息，并有可能影响了我们观察数据后对模型选择的倾向。
+
+一个解决办法是在第一次接触数据时就切分好数据进行保存，另一个解决办法是在切分时指定随机种子以便每一次生成相同的随机序列。但是两者都不保险，一个典型的场景就是当有新的数据添加进来时，两种方式都又会产生新的样本序列。可以针对样本计算 hash 值来解决，方式是计算出样本的 hash 值，当其特定位小于一定比例值时，将其归入测试集。还有的做法是使用样本的 index 作为切分测试集的指标，但是这种方式需要保证新增的样本是以追加的方式添加到数据集中。
+
+** Discover and Visualize the Data to Gain Insights
+
+*** 观察数据属性之间的关系
+
+可以通过 =pandas.DataFrame.corr()= 来技术属性之间的协方差关系，但是需要注意的是协方差仅能观察到线性关系，对非线性关联关系却是无能为力。
+
+*** 尝试对一部分属性进行组合
+
+通过一些属性构造一些新的属性来进行进一步的观察。
+
+** Prepare the Data for Machine Learning Algorithms
+
+获取数据后，大致上需要以下几个步骤对数据进行处理才能进入模型进行训练：
+
+1. Data Cleaning: 包括确实值处理、属性转换等；
+2. Handing Text and Categorical Attributes:
+3. Feature Scaling: Min-Max Scaling and Standardization，Min-Max 的方式简单，将值压缩在 $0~1$ 范围内，但是易受异常点的影响，而 Standardization 不易受到异常点的影响，但是其值的范围是 $-1~1$ ，对于某些算法（神经网络需要$0~1$）使用法直接使用这些数据的。
+
+整个特征转换的过程可以通过自定义 Transformers 来进行优化组织。Scikit-Learn 使用 duck typing 的形式来组织功能，因此如果一个类实现了 =fit()= 、 =transform()= 和 =fit_transform()= 方法就可以算是一个 Transformer。如果继承自 =TransformerMixin= 父类，则可以省略掉显式定义 =fit_transform()= 的过程。此外，如果继承 =BaseEstimator= 父类（但是初始化函数中不能使用 =*args= 或 =**kargs= ），则可以使用 =get_params()= 和 =set_params()= 两个函数来进行超参 tuning。
+
+** Select and Train a Model
+   
+#+BEGIN_QUOTE
+  You should save every model you experiment with, so you can come back easily to any model you want. Make sure you save both the hyperparameters and the trained parameters, as well as the cross-validation scores and perhaps the actual predictions as well. This will allow you to easily compare scores across model types, and compare the types of erros the make.
+#+END_QUOTE
+
+** Fine-Tune Your Model
+
+在尝试好模型后，可以通过以下多种方式来调整模型：
+
+- =GridSearchCV= 或者 =RandomSearchCV= 来寻找最优的超参
+- 将已经试验好的多个模型，分析其预测结果，对于差异化的模型进行集成
+- 分析模型的结果
+
+* Classification
+
+* Training Models
+
+* Support Vector Machines
+
+* Decision Tree
+
+通过一定方式（信息增益、信息熵）选择出的当前最佳特征，将训练集分割成基本正确的子集。当来自新的样本后，根据训练时依据的特征顺序查看样本所属的类别。
+
+该算法可用于分类也可用于回归，当用于回归时，则根据决策树决定的最终的叶子结点中所有样本的均值作为最终结果。速度方面，由于计算时需要从根节点到叶子结点进行比较，因此一次完成的分类/预测只需要对比
+$O(\log_2(m))$ 个结点，因此速度非常快。
+
+** 训练算法
+
+*** CART (Classification And Regression Tree)
+
+每次选择特征作为分割结点时，都尽量达到分割后的子集更纯的目的，而度量"更纯"可以使用两种方式：
+
+- Gini 系数： $G_i=1-\sum_{k=1}^np_{i,k}^2$ ，其中 $p_{i,k}$ 为第 i 个结点时类别 k 的样本数；
+- 信息熵： $H_i=-\sum_{k=1}^np_{i,k}\log(p_{i,k})$ 。
+
+两者的区别在于，Gini 系数的计算相对较快，而使用信息熵则会生成更加平衡的决策树。
+
+整个算法对应的损失函数为：
+
+$$J(k,t_k)=\frac{m_{left}}{m}G_{left}+\frac{m_{right}}{m}G_{right}$$
+
+其中 $G_{left/right}$ 分别表示左右子树的"纯度"，而 $m_{left/right}$ 分别表示左右子树的样本数。
+
+整个 CART 算法会递归的生成子决策树，CART 算法中 *所有的子决策树都是二叉树* ，而其他算法比如 ID3 可以生成多叉树。
+
+*** Pros. and Cons.
+
+- Cons:
+
+  - 决策树由于是非参数模型（Nonparametric model）对数据集做的假设很少（其他比如线性模型则要求数据满足线性分布），因此对应的模型参数很少，并且无需在训练之前进行假定，因此在训练时，参数很容易拟合向训练数据（对应的比如线性模型则由于参数需要 predetermined，因此通常参数的训练范围会有所限制，减小了过拟合的风险）。解决方式是 restrict the Decision Tree's freedom during training，比如参数减小 =max_depth= 、 =max_features= 等 =max_*= 类参数，增大 =min_samples_leaf= 、 =min_weight_fraction_leaf= 等 =min_*= 类参数。除此之外，还有的解决方式是进行剪枝（依据 $\chi^2$ 检验）
+  - 对数据敏感，如果训练数据有微小的改动（比如坐标旋转 $45^\circ$ ），都可能导致最终生成的决策树有很大的变化，进而导致过拟合。解决方式是使用 PCA 先处理数据。
+  - 算法是基于贪心策略建立，不能保证找到的是全局最优解。可以通过引入 Random Forest 算法解决。
+
+- Pros:
+
+  - 前面分析过，计算速度较快
+  - 易于解释、容易使用、限制较小
+
+* Ensemble Learning and Random Forests
+
+#+BEGIN_QUOTE
+  Wisdom of the crowd.
+#+END_QUOTE
+
+黑魔法：
+
+#+BEGIN_QUOTE
+  You will often use Ensemble methods near the end of a project, once you have already built a few good predictors, to combine them into an even better predictor.
+#+END_QUOTE
+
+** Ensemble 时投票的方式
+
+- hard voting: 哪一类得票多就属于哪一类
+- soft voting: 需要弱分类器可以预测概率，最终的结果是看所有的弱分类在每一类上的概率平均，哪一类值最大就属于哪一类
+
+** 集成学习的理论基础
+
+集成学习的理论基础主要基于大数定律。
+
+--------------
+
+*大数定律：*
+在试验不变的条件下，重复试验多次，随机事件的频率近似等于它的概率。
+
+--------------
+
+假设一个弱分类器就是一枚硬币，这种特殊的硬币头朝上的概率要大于头朝下的概率（头朝上51%，头朝下49%，也就是说弱分类器的准确率只有51%），但是随着试验量的增加，最终硬币头朝上的频率会趋向于它的概率51%，也就是这些次数中大部分的弱分类器都预测正确，结合 ensemble 的方式，最终分类结果正确。
+
+但是，这个结果有一个很重要的前提：每次抛硬币时都是独立不相关的，也就是说弱分类器要尽量相互独立。但是在实际情况下通常很难保证，一种解决方式是在构造弱分类器时尽量使用不同的算法。
+
+** Bagging and Pasting
+
+解决弱分类器尽量独立除了使用不同的弱分类器之外，还可以在弱分类器使用不同的样本子集。根据弱分类器采样样本时是放回抽样还是不放回抽样，分为了：
+
+- Bagging: 放回抽样
+- Pasting：不放回抽样
+
+通常使用放回抽样，因为这样容易产生更多的子模型，不受样本容量的限制，而且在切分样本时，不容易收到随机切分的影响。
+
+构造弱分类器后，可以通过 hard voting 的方式统计结果。从结构上来看，Bagging 或者 Pasting 天生适合并行。
+
+*** Out-of-Bag(oob) Evaluation
+
+Bagging 时，由于是放回抽样，因此可能会导致一部分样本从来不会抽到（大概占比 $1-(1-\exp(-1)){\approx}37\%$ ），因此很多时候在训练时，可以使用这部分数据作为验证集（scikit-learn 中 =obb_score=True= ）
+
+*** Random Patches and Random Subspaces
+
+同理采样样本，采样特征也可以增加弱分类器之间的独立性。同时采样样本和特征叫做 /Random Patches/ method，只采样特征叫做 /Random Subspaces/ method.
+
+*** Random Forests
+
+随机森林是一种典型的 Bagging 算法，其使用决策树作为弱学习器，但是并非直接使用决策树，而是在决策树的基础上进行了一些改进：树中每个结点选择特征时，仅在一个随机子集中选择最优特征（传统的决策树是在所有的特征子集中进行选择）。更进一步的，在每个结点中，阈值的选择也是随机的，后者通常被称为 /Extra-Trees(Extremely Randomized Trees)/ ，由于和 Random Forests 相比，Extra-Trees 少了一步寻找最优特征的操作，因此在计算速度上，Extra-Trees 计算得更快。
+
+由于决策树的特性：重要的特征更可能出现在靠近根结点的位置，而相对不重要的特征更可能出现在靠近叶子结点的位置，因此随机森林能够很容易的得到每个特征的重要性，因此通常会在建模过程中用于大概的探索每个特征的重要性。
+
+** Boosting
+
+#+BEGIN_QUOTE
+  Train predictors sequentially, each trying to correct its predecessor.
+#+END_QUOTE
+
+*** AdaBoost
+
+训练时，当前弱学习器会基于前一弱学习器的结果对样本进行权重调整（前一弱学习器分错的样本调高权重），所有的弱学习器都训练完成后，使用类似 Bagging 或 Pasting 的方式对各个弱学习器进行集成，集成时对效果相对较好的弱学习器分配较高的权重。从其结构可知，Boosting 无法并行。
+
+--------------
+
+*AdaBoost 算法：*
+
+1. 将每个样本的初始权重设置为 $\frac{1}{m}$，使用公式 $$r_j=\frac{\sum_{i=1,\hat{y}_j^{(i)}{\ne}y^{(i)}}^m{w_{(i)}}}{\sum_{i=1}^{m}w^{(i)}}$$ 计算第 j 个弱学习器的错误率 $r_j$
+2. 使用公式 $$\alpha_j=\eta\log\frac{1-r_j}{r_j}$$ 更新第 j 个弱学习器的权重
+3. 使用公式 $$w^{(i)}\gets\begin{cases}w^{(i)},& \text{if }\hat{y}_j^{(i)}=y^{(i)}\\w^{(i)}\exp(\alpha_j),& \text{if }\hat{y}_j^{(i)}{\ne}y^{(i)}\end{cases}$$ 对所有的样本权重进行更新
+4. 当达到指定数量的弱学习器或达到指定的指标时算法停止。
+
+--------------
+
+*** Gradient Boosting
+
+#+BEGIN_QUOTE
+  Instead of tweaking the instance weights at every iteration like AdaBoost does, this method tries to fit the new predictor to the /residual errors/ made by the previous predictor.
+#+END_QUOTE
+
+以训练三个树作为示例：
+
+#+BEGIN_SRC python
+    tree_reg1 = DecisionTreeRegressor(max_depth=2)
+    tree_reg1.fit(X, y)
+
+    y2 = y- tree_reg1.predict(X)
+
+    tree_reg2 = DecisionTreeRegressor(max_depth=2)
+    tree_reg2.fit(X, y2)
+
+    y3 = y2 - tree_reg2.predict(X)
+
+    tree_reg3 = DecisionTreeRegressor(max_depth=2)
+    tree_reg3.fit(X, y3)
+#+END_SRC
+
+最终预测结果为：
+
+#+BEGIN_SRC python
+    y_pred = sum(tree.pred(X_new) for tree in (tree_reg1, tree_reg2, tree_reg3))
+#+END_SRC
+
+** Stacking
+
+分为两步，首先切分数据集将一部分数据集用于训练出弱学习器，再基于另一部分数据集使用弱学习器的结果作为输入训练最终的学习器（Blender）
+
+* Dimensionality Reduction
+
+在2维空间内，一个单元空间中（ $1{\times}1$ ），随机选择一个点，其离边界的距离小于0.001的概率只有 $0.4\%$ 。而在一个10,000维的空间中，这个概率却可以达到 $99.9999999\%$ ，因为在高维空间中，大多数点都非常靠近维度边界。同样，在2维空间中随机选择两个点，两者之间的平均距离大概是 $0.52$ ，3维空间中该值增加到 $0.66$ ，但是在一个1,000,000维的空间中，该值可以达到 $\sqrt{\frac{1,000,000}{6}}{\approx}408.25$ 。
+
+这两个现象都暗示了在高维空间中，点大多数都是稀疏的（靠近边界），并且相互之间距离都较远。因此新样本极有可能和已有的训练样本都相距较远，这样导致最大的一个风险就是维度越高，过拟合的风险越大。
+
+一个解决方式当然就是增加训练样本，但是研究表明训练样本需要的数量会随着维度的增加而指数增长，因此通常都会需要对高维的样本进行降维处理。
+
+降维可以降低过拟合的风险、加快训练速度，有些时候还可以过滤掉一些无用的噪声，照理说应该所有的模型都直接使用降维才对。但是事情并非绝对，同压缩一样，降维肯定会损失一部分有效的信息，因此通常在考虑降维之前都会尝试使用原始数据进行一次训练看效果如何，如果出现速度较慢或者过拟合再考虑降维。基本思想还是高德纳的那句话：
+
+#+BEGIN_QUOTE
+  Don't cut yourself.
+#+END_QUOTE
+
+** 常见的降维方式
+
+简单说，有两种：
+
+1. 映射
+2. manifold learning (流形学习？)
+
+第一种方式是通过将数据映射到一个低维的空间达到降维的目的；第二种方式是通过将高维空间中的平面展开至低维空间（"瑞士卷"展开）。
+
+针对 Manifold Learning，原文的举例应该更直观一些：
+
+#+BEGIN_QUOTE
+  Think about the MNIST dataset: all handwritten digit images have some similarities. They are made of connected lines, the borders are white, they are more or less centered, and so on. If you randomly generated images, only a ridiculously tiny fraction of them would look like handwritten digits. In other words, the degrees of freedom available to you if you try to create a digit image are dramatically lower than the degrees of freedom you would have if you were allowed to generate any image you wanted. These constraints tend to squeeze the dataset into a lower-dimensional manifold.
+#+END_QUOTE
+
+但是并非绝对，有时经过 manifold 之后的数据进行分类反而更加复杂一些。因此通常降维确实能够加快训练速度，但是其并非绝对的可以简化数据。
+
+映射方式的典型代表是 PCA，manifold 方式的典型代表是 LLE。
+
+** PCA 主成分分析
+
+PCA 的原理是尽量选取保留了尽可能多的方差的坐标轴，然后将数据映射到这些坐标轴上。
+
+#+BEGIN_QUOTE
+  It seems reasonable to select the axis that preserves the maximum amount of variance, as it will most likely lose less information than the other projections.
+#+END_QUOTE
+
+*** 主成分（Principal Component）
+
+首先需要了解 PCA 的计算过程：
+
+1. 首先寻找一个保留了最大方差的坐标轴；
+2. 在第一个坐标轴的垂直方向寻找最大保留剩下方差的坐标轴；
+3. 在前两个坐标轴的基础上寻找最大保留了剩下方差的坐标轴；
+4. 如此往复，寻找出尽量多的坐标轴保留了原始数据的方差信息。
+
+在此过程中，每个坐标轴的单位向量就是一个_主成分_。
+
+寻找这些保留了最大方差的坐标轴的方式通常是使用奇异值分解（Singular Value Decomposition, SVD），该操作会将原始的样本矩阵 $X$ 转换成点乘的形式： $U\cdot\sum{\cdot}V^T$ ，其中 $V^T$ 就包含了我们所寻找的主成分。
+
+*注意：* 执行 PCA 之前需要保证数据已经 centered。不过 scikit-learn 默认会自动做该操作。
+
+*** 映射
+
+在确定了主成分之后，可以选择前$d$个保存了较多方差的主成分来对原始数据进行映射：
+
+#+BEGIN_SRC python
+    pca = PCA(n_components=2)
+    X2D = pca.fit_transform(X)
+#+END_SRC
+
+映射之后可以通过 =pca.explained_variance_ratio_= 来查看所有 $d$ 个主成分分别保留的方差，其和就是 $d$ 个主成分保留了多少原始数据的方差。
+
+但是通常 $d$ 是很难确定下来的，因此常用的做法是指定保留多少的方差：
+
+#+BEGIN_SRC python
+    pca = PCA(n_components=0.95)  # 保留95%的方差信息
+    X_reduced = pca.fit_transform(X)
+#+END_SRC
+
+*** 压缩
+
+通过 PCA 后，维度有所降低，那数据可以理解为已经进行了压缩，那执行 PCA 的反操作就可以理解为执行了解压缩，当然"解压缩"后肯定是无法回复称原来的数据集（毕竟损失了一部分方差信息），解压缩后的数据和原始数据之间的 mean squared distance 就叫做 /Reconstruction Error/
+
+*** 增量 PCA
+
+和在线学习一样，如果存在内存大小限制问题，可以使用"增量"的方式：
+
+#+BEGIN_SRC python
+    inc_pca = IncrementalPCA(n_components=154)
+    for X_batch in np.array_split(X_mnist, 100):
+        inc_pca.partial_fit(X_batch)
+    X_mnist_reduced = inc_pca.transform(X_mnist)
+#+END_SRC
+
+*** Randomized PCA
+
+#+BEGIN_SRC python
+    rnd_pca = PCA(n_components=154, svd_solver='randomized')
+    X_reduced = rnd_pca.fit_transform(X_mnist)
+#+END_SRC
+
+传统的 PCA 的计算复杂度为 $O(m{\times}n^2)+O(n^3)$ ，随机 PCA 的计算复杂度可以降低到 $O(m{\times}d^2)+O(d^3)$ ，代价是该方式只能寻找到近似最优。
+
+** Kernel PCA
+
+在 SVM 中，核技巧可以将数据映射到高维空间，以使在低维空间线性不可分的问题转换为高维的线性可分问题。同样的思想应用到 PCA，产生了 kPCA 算法，通过使用非线形映射，将高维空间中数据映射到地位空间中，以达到降维的目的。典型的例子就是三维空间中的"瑞士卷"，可以通特定的 kPCA 算法对其进行展开，转换到二维平面。
+
+#+BEGIN_SRC python
+    rbf_pca = KernelPCA(n_components=2, kernel='rbf', gamma=0.4)
+    X_reduced = rbf_pca.fit_transform(X)
+#+END_SRC
+
+由于 kPCA 是无监督的，因此并没有特别的指标进行选择合适的超参，通常的做法是结合特定的任务（比如分类）进行 =GridSearchCV= 来确定 kPCA 的超参。还有一种确定 kPCA 参数的方式是通过 Reconstruction Error 来确定。
+
+** LLE (Locally Linear Embedding)
+
+简单说来，该算法首先找出每个样本的 closest neighbors，然后到低维空间中找到近似对应关系的表达。因此这种方式尤其适合 unrolling twisted manifolds。
+
+#+BEGIN_SRC python
+    lle = LocallyLinearEmbedding(n_components=2, n_neighbors=10)
+    X_reduced = lle.fit_transform(X)
+#+END_SRC
+
+--------------
+
+*LLE 算法:*
+
+1. 对于每一个样本 $x^{(i)}$ ，找到其 $k$ 个 closest neighbors；
+2. 将这$k$个邻居样本传入线性函数来构造 $x^{(i)}$ ： $x^{(i)'}=\sum_{j=1}^mw_{i,j}x^{(j)}$ ，构造的目标是使的 $x^{(i)}$ 和 $x^{(i)'}$ 之间的距离尽量的小；
+
+--------------
+
+公式化表达：
+
+$$\hat{W}=\text{argmin}_W\sum_{i=1}^m||x^{(i)}-\sum_{j=1}^mw_{i,j}x^{(j)}||^2$$
+
+$$\text{subject to}\begin{cases}w_{i,j}=0& \text{if }x^{(j)}\text{ is not one of the k closest neighbors of  }x^{(i)}\\\sum_{j=1}^mw_{i,j} & \text{for i=1,2,...,m}\end{cases}$$
+
+其中 $\hat{W}$ 编码了样本中的所有样本的关系信息。下一步就是将样本映射到低维空间时，尽量的保存这些关系信息。

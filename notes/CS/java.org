@@ -1,3 +1,5 @@
+#+TITLE: Notes about Java
+
 * 运行时的trick
 
 ** 运行指定类中的主函数

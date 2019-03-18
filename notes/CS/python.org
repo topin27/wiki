@@ -1,3 +1,5 @@
+#+TITLE: Notes about Python
+
 * python中的一些奇怪的点
 
 ** 编码问题
@@ -109,7 +111,7 @@ Python2中打开文件是 =open= ，默认是 =File.open= ，但是在Python3中
         do_something()
 #+END_SRC
 
-*** 实现=with= clause
+*** 实现 =with= clause
 
 #+BEGIN_SRC python
     class Meter():
@@ -196,9 +198,17 @@ Python2中打开文件是 =open= ，默认是 =File.open= ，但是在Python3中
         logger.error('Failed to open file', exc_info=True)
 #+END_SRC
 
-*** 不要在模块级别调用 =getLogger=
+*** +不要在模块级别调用 =getLogger=+
 
-这么做的原因是导入模块会导致模块顶级的代码执行，因此会使得 =getLogger= 函数执行，但是如果导入模块后又调用 =logging.fileConfig= 或者 =logging.dictConfig= 等函数来意图初始化logger时，默认这些函数会使得已经存在的logger失效，因此导致日志无法输出。
++这么做的原因是导入模块会导致模块顶级的代码执行，因此会使得 =getLogger= 函数执行，但是如果导入模块后又调用 =logging.fileConfig= 或者 =logging.dictConfig= 等函数来意图初始化logger时，默认这些函数会使得已经存在的logger失效，因此导致日志无法输出。+
+
+首先，在 main 部分直接使用 =basicConfig= 并不会使已经存在的 logger 失效，而作为库，默认的行为也应该是被调用的时候不提供日志输出对 main 部分进行干扰。此外，不管是 =logging.fileConfig= 还是 =logging.dictConfig= 都有一个 =disable_existing_loggers= 参数可以调节是否需要禁用已经存在的 logger，以解决该问题。
+
+而且，[[https://stackoverflow.com/questions/22807972/python-best-practice-in-terms-of-logging][Python's rules for software composition]] 是通过模块来组合代码，而不是类 ，因此最常见的方式反而是直接在 =import= 后直接进行：
+
+#+BEGIN_SRC python
+	logger = logging.getLogger(__name__)
+#+END_SRC
 
 ** Handlers
 

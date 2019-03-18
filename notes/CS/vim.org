@@ -1,3 +1,5 @@
+#+TITLE: Notes about VIM
+
 * Cheat Sheet
 
 ** 粘帖时出现混乱的缩进
@@ -28,3 +30,9 @@
 ** 将文本 hex 化
 
 在 vim 中运行 ~:%!xxd~ 可以以 hex 的方式编辑当前文件，执行 ~:%!xxd -r~ 可以还原回原始文件。
+
+** 补全相关
+
+- 整行补全： =<C-X><C-L>=
+- 文件路径补全： =<C-X><C-F>=
+- Omni completion:  =<C-X><C-O>=

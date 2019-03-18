@@ -1,23 +1,23 @@
---------------
+#TITLE: Notes about yum & rpm
 
 ** Cheat Sheet
 
 *** =yum=
 
--  本地安装：=yum localinstall *.rpm=
+-  本地安装： =yum localinstall *.rpm=
 
--  本地更新：=yum localupdate wine*=
+-  本地更新： =yum localupdate wine*=
 
 -  包下载
 
-   -  =yum install yum-downloadonly=，然后=yum install --downloadonly <package>=
-   -  =yum install yum-utils=，然后=yumdownloader <package>=
+   -  =yum install yum-downloadonly= ，然后 =yum install --downloadonly <package>=
+   -  =yum install yum-utils= ，然后 =yumdownloader <package>=
 
--  查询特定的版本：=yum --showduplicates list httpd=
+-  查询特定的版本： =yum --showduplicates list httpd=
 
 *** =rpm=
 
--  列出所有包：=rpm -qa=
--  查看包内所有文件的安装路径：=rpm -ql <package-name>=
--  查看包文件内所有文件：=rpm -qlp <package-path>=
--  查询一个文件所属的包：=rpm -qf <file-path>=
+-  列出所有包： =rpm -qa=
+-  查看包内所有文件的安装路径： =rpm -ql <package-name>=
+-  查看包文件内所有文件： =rpm -qlp <package-path>=
+-  查询一个文件所属的包： =rpm -qf <file-path>=

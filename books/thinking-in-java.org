@@ -1,9 +1,10 @@
+#+TITLE: Notes about "Thinking in Java"
+
 * Operators
 
 ** Relation operators
 
-java中的 ==== 操作符直接比较引用，通常使用类的 =.equals()=
-方法来进行值比较，如果需要自定义类，如果没有重定义相应的方法，默认仍然是引用比较。
+java中的 ~==~ 操作符直接比较引用，通常使用类的 =.equals()= 方法来进行值比较，如果需要自定义类，如果没有重定义相应的方法，默认仍然是引用比较。
 
 * Initialization & Cleanup
 
@@ -19,8 +20,7 @@ java中的 ==== 操作符直接比较引用，通常使用类的 =.equals()=
 
 *** *=final=* data
 
-=final=
-修饰的变量如果是内建类型，则表示该变量是一个常量，如果修饰的类型是一个类，则表示的该类实例的引用是不可变的（即不可再指向其他实例）。
+=final= 修饰的变量如果是内建类型，则表示该变量是一个常量，如果修饰的类型是一个类，则表示的该类实例的引用是不可变的（即不可再指向其他实例）。
 
 *** *=final=* arguments
 
@@ -40,8 +40,7 @@ java中的 ==== 操作符直接比较引用，通常使用类的 =.equals()=
 
 *** Method-call binding
 
-java中除开 =static= 和 =final= 关键字指定的函数，所有的函数绑定都是late
-binding。
+java中除开 =static= 和 =final= 关键字指定的函数，所有的函数绑定都是late binding。
 
 *** Pitfall: "overriding" *private* methods
 
@@ -84,13 +83,8 @@ interface中的任何变量都自动转换为static和final。
 
 *** Pitfall: the lost exception
 
-如果一个try块抛出了异常，进入了finally块，并且很不幸的finally块中也抛出了异常，那么上层在捕获的时候，finally块中抛出的异常会覆盖掉try块中的异常，此为“lost
-exception”。
+如果一个try块抛出了异常，进入了finally块，并且很不幸的finally块中也抛出了异常，那么上层在捕获的时候，finally块中抛出的异常会覆盖掉try块中的异常，此为“lost exception”。
 
 ** Exception restrictions
 
-When you override a method, you can throw only the exceptions that have
-been specified in the base-class version of the method. This is a useful
-restriction, since it means that code that works with the base class
-will automatically work with any object derived from the base class,
-including exceptions.
+When you override a method, you can throw only the exceptions that have been specified in the base-class version of the method. This is a useful restriction, since it means that code that works with the base class will automatically work with any object derived from the base class, including exceptions.

@@ -1,70 +1,42 @@
--  [[https://www.kdnuggets.com/2017/01/machine-learning-cyber-security.html][Machine
-   Learning and Cyber Security Resources]]:
-   列出了应用在安全领域的一些较高质量算法的papers。
--  [[http://www.secrepo.com/][SecRepo.com - Samples of Security Related
-   Data]]: 安全领域的一些样本，具体质量及数量如何未有考证。
--  [[https://research.google.com/pubs/SecurityPrivacyandAbusePrevention.html][Security,
-   Privacy and Abuse Prevention]]:
-   google的安全研究方向，以及各个方向的高质量论文。
--  [[https://www.anquanke.com/post/id/107124]]:
-   360的检测网络中是否有木马回连cc服务器的算法，但是目前的问题在于数据集不好收集，但是也有可能某些开源数据集满足其条件；
--  [[https://github.com/NagabhushanS/Machine-Learning-Based-Botnet-Detection]]:
-   一个僵尸网络的检测源码（内含数据集，数据集应该是用的[[https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/][这个]]
-   ），看源码似乎只是简单的将各种算法合在了一块，可以参考其特征提取的方式；
--  [[https://www.kaggle.com/c/malware-classification/][Microsoft Malware
-   Classification Challenge (BIG 2015)]]：kaggle上关于恶意程序分类的竞赛
+-  [[https://www.kdnuggets.com/2017/01/machine-learning-cyber-security.html][Machine Learning and Cyber Security Resources]]: 列出了应用在安全领域的一些较高质量算法的papers。
+-  [[http://www.secrepo.com/][SecRepo.com - Samples of Security Related Data]]: 安全领域的一些样本，具体质量及数量如何未有考证。
+-  [[https://research.google.com/pubs/SecurityPrivacyandAbusePrevention.html][Security, Privacy and Abuse Prevention]]: google的安全研究方向，以及各个方向的高质量论文。
+-  [[https://www.anquanke.com/post/id/107124]]: 360的检测网络中是否有木马回连cc服务器的算法，但是目前的问题在于数据集不好收集，但是也有可能某些开源数据集满足其条件；
+-  [[https://github.com/NagabhushanS/Machine-Learning-Based-Botnet-Detection]]: 一个僵尸网络的检测源码（内含数据集，数据集应该是用的[[https://mcfp.felk.cvut.cz/publicDatasets/CTU-Malware-Capture-Botnet-42/][这个]] ），看源码似乎只是简单的将各种算法合在了一块，可以参考其特征提取的方式；
+-  [[https://www.kaggle.com/c/malware-classification/][Microsoft Malware Classification Challenge (BIG 2015)]]：kaggle上关于恶意程序分类的竞赛
 
 * 钓鱼网址检测
 
--  [[https://archive.ics.uci.edu/ml/datasets/Phishing%2BWebsites][<https://archive.ics.uci.edu/ml/datasets/Phishing+Websites>]]:
-   钓鱼网址的样本，并且有文档详细说明了钓鱼网址的特点，同时[[https://github.com/rishy/phishing-websites][这里]]
-   也有一个现成的repo。
--  [[http://eprints.hud.ac.uk/id/eprint/24330/]]:
-   同样也是钓鱼网址的样本，并且有相关的论文
+-  [[https://archive.ics.uci.edu/ml/datasets/Phishing%2BWebsites][<https://archive.ics.uci.edu/ml/datasets/Phishing+Websites>]]: 钓鱼网址的样本，并且有文档详细说明了钓鱼网址的特点，同时[[https://github.com/rishy/phishing-websites][这里]] 也有一个现成的repo。
+-  [[http://eprints.hud.ac.uk/id/eprint/24330/]]: 同样也是钓鱼网址的样本，并且有相关的论文
 
 * 入侵检测
 
--  [[https://github.com/alryco/Network-Intrusion-Detection-System]]:
-   一个网络入侵检测的源码（数据集是pcap抓包），但是根据代码来看好像是实时的？；
--  [[https://github.com/mpab/kddcup99]]:
-   kdd99的一份代码，检测网络入侵，[[https://blog.csdn.net/com_stu_zhang/article/details/6987632][这里]]
-   对kdd99数据集进行了详细的描述；
+-  [[https://github.com/alryco/Network-Intrusion-Detection-System]]: 一个网络入侵检测的源码（数据集是pcap抓包），但是根据代码来看好像是实时的？；
+-  [[https://github.com/mpab/kddcup99]]: kdd99的一份代码，检测网络入侵，[[https://blog.csdn.net/com_stu_zhang/article/details/6987632][这里]] 对kdd99数据集进行了详细的描述；
 -  [[https://github.com/chinskiy/KDD-99]]: 同上；
--  [[http://enigmater.blogspot.hk/2017/03/intrusion-detection-based-on-supervised.html]]:
-   一篇使用传统的方法来进行入侵检测的文章，其中包含源码，但是其中一个有问题的地方是数据集是使用正则直接在访问日志上生成的，有参考借鉴意义的地方在于其使用的数据集及处理方式；
--  [[https://github.com/vinayakumarr/Network-Intrusion-Detection]]:
-   有比较大的参考意义，其使用DL实现了一批算法来进行入侵检测，数据集也都是公开数据集，同时附带有相关论文且相对比较新；
+-  [[http://enigmater.blogspot.hk/2017/03/intrusion-detection-based-on-supervised.html]]: 一篇使用传统的方法来进行入侵检测的文章，其中包含源码，但是其中一个有问题的地方是数据集是使用正则直接在访问日志上生成的，有参考借鉴意义的地方在于其使用的数据集及处理方式；
+-  [[https://github.com/vinayakumarr/Network-Intrusion-Detection]]: 有比较大的参考意义，其使用DL实现了一批算法来进行入侵检测，数据集也都是公开数据集，同时附带有相关论文且相对比较新；
 
 * 异常流量检测（NTA）
 
-** TODO
-[[https://github.com/rkmalaiya/network_anomaly_detection_deep_learning][rkmalaiya/networkanomalydetectiondeeplearning]]
-code
+** TODO [[https://github.com/rkmalaiya/network_anomaly_detection_deep_learning][rkmalaiya/networkanomalydetectiondeeplearning]] code
 
 用于检测网络异常流量的代码，比较新，repo上描述有相关论文会发表，但是目前还未搜到；
 
-** TODO
-[[https://github.com/dethakur/NetworkAnomalyDetection][dethakur/NetworkAnomalyDetection]]
-code
+** TODO [[https://github.com/dethakur/NetworkAnomalyDetection][dethakur/NetworkAnomalyDetection]] code
 
 一个用于检测网络异常流量的代码，没见有相关的论文，数据集使用的是CAIDA；
 
-** DONE
-[[https://github.com/axelfahy/NetworkAnomalyDetection][axelfahy/NetworkAnomalyDetection]]
-code
+** DONE [[https://github.com/axelfahy/NetworkAnomalyDetection][axelfahy/NetworkAnomalyDetection]] code
 
 一个基于spark的网络异常流量检测scala实现，数据集使用的是KDD99。
 
 算法方面，就是直接使用了spark中的三个聚类算法而已。
 
-** TODO
-[[https://schd.ws/hosted_files/flocon2018/14/1.%2520Palladino_FloCon_2018-01-09.pdf][Anomaly
-Detection in Cyber Networks using Graph-node and Role-dynamics and
-NetFlow Bayesian Normalcy Modeling]] ppt
+** TODO [[https://schd.ws/hosted_files/flocon2018/14/1.%2520Palladino_FloCon_2018-01-09.pdf][Anomaly Detection in Cyber Networks using Graph-node and Role-dynamics and NetFlow Bayesian Normalcy Modeling]] ppt
 
-** DONE
-[[https://www.symantec.com/connect/articles/detecting-worms-and-abnormal-activities-netflow-part-1][Detecting
-Worms and Abnormal Activities with NetFlow, Part 1]] blog
+** DONE [[https://www.symantec.com/connect/articles/detecting-worms-and-abnormal-activities-netflow-part-1][Detecting Worms and Abnormal Activities with NetFlow, Part 1]] blog
 
 主要介绍了使用NetFlow来进行异常流量检测的方式。
 
@@ -99,14 +71,11 @@ matching。某些类型的攻击会使用特定类型的端口，比如SQL Slamm
 worm使用1434、NetBus
 Trojan使用端口12345，而某些类型的攻击则会使用一些IANA保留的IP来进行攻击。
 
-** DOING [[http://www.docin.com/p-1064202974.html][Network Anomaly
-Detection Based on Statistical Approach and Time Series Analysis]] paper
+** DOING [[http://www.docin.com/p-1064202974.html][Network Anomaly Detection Based on Statistical Approach and Time Series Analysis]] paper
 
 上海交大的一篇关于异常流量检测的毕业论文。
 
-** DONE
-[[https://www.r-bloggers.com/data-mining-for-network-security-and-intrusion-detection/][Data
-mining for network security and intrusion detection]] blog
+** DONE [[https://www.r-bloggers.com/data-mining-for-network-security-and-intrusion-detection/][Data mining for network security and intrusion detection]] blog
 
 Varun Chandola et al. proposed to derive following features:
 
@@ -133,15 +102,11 @@ Varun Chandola et al. proposed to derive following features:
    -  Number of flows to the destination IP address using same source
       port in the last N flows
 
-** DONE
-[[http://www.blackhat.com/presentations/bh-europe-05/bh-eu-05-fischbach.pdf][Network
-Flows and Security]] ppt
+** DONE [[http://www.blackhat.com/presentations/bh-europe-05/bh-eu-05-fischbach.pdf][Network Flows and Security]] ppt
 
 ppt的中间部分大概的介绍了各种异常流量的特点。
 
-** DONE
-[[https://blog.csdn.net/g2v13ah/article/details/78474370][异常检测：百度是这样做的]]
-blog
+** DONE [[https://blog.csdn.net/g2v13ah/article/details/78474370][异常检测：百度是这样做的]] blog
 
 三个场景：
 
@@ -202,26 +167,17 @@ blog
 
    对于恒定阈值的参数自动配置，估算罕见数据出现的概率，即可确定曲线的阈值，使用ECDF（经验累计概率分布曲线）来估计随机变量的概率分布，ECDF曲线的横轴是数据值，纵轴是概率，表达的是小于等于某数值的样本比例。其他两种算法由于最终都是转换到特定的空间使用阈值方式处理，因此参数自动配置方式也是类似。
 
-** TODO [[http://www.doc88.com/p-7794205294246.html][时间窗口检测异常]]
-paper
+** TODO [[http://www.doc88.com/p-7794205294246.html][时间窗口检测异常]] paper
 
-** DONE
-[[https://zhuanlan.zhihu.com/p/33695908][用Python预测「周期性时间序列」的正确姿势]]
-blog
+** DONE [[https://zhuanlan.zhihu.com/p/33695908][用Python预测「周期性时间序列」的正确姿势]] blog
 
-** TODO
-[[https://www.leiphone.com/news/201712/zbX22Ye5wD6CiwCJ.html][Kaggle比赛冠军经验分享：如何用
-RNN 预测维基百科网络流量]] blog code
+** TODO [[https://www.leiphone.com/news/201712/zbX22Ye5wD6CiwCJ.html][Kaggle比赛冠军经验分享：如何用 RNN 预测维基百科网络流量]] blog code
 
-** DONE
-[[http://www.vants.org/?post%3D185][异常流量分析方法------发现-定位-管控]]
-blog
+** DONE [[http://www.vants.org/?post%3D185][异常流量分析方法------发现-定位-管控]] blog
 
 对常见的攻击类型及排查处理方式给了一个大概的总结，可以从中提取出一些有效的特征。
 
-** DOING
-[[https://www.cnblogs.com/alisecurity/p/6378869.html][基于机器学习的web异常检测]]
-blog
+** DOING [[https://www.cnblogs.com/alisecurity/p/6378869.html][基于机器学习的web异常检测]] blog
 
 观点：“正常流量总是相似的，异常流量各有各的异常”。因此使用规则判断坏的流量，而使用模型判断好的流量。
 
@@ -258,14 +214,10 @@ SVM）。
 
 * 用户行为分析（UBA）
 
-** DOING
-[[https://www.ekransystem.com/en/blog/best-practices-building-baseline-user-behavior][Best
-Practices for Building a Baseline of User Behavior in Enterprise]] blog
+** DOING [[https://www.ekransystem.com/en/blog/best-practices-building-baseline-user-behavior][Best Practices for Building a Baseline of User Behavior in Enterprise]] blog
 
 * sql注入
 
-** DONE
-[[http://www.freebuf.com/articles/web/176709.html][基于卷积神经网络的SQL注入检测]]
-blog code
+** DONE [[http://www.freebuf.com/articles/web/176709.html][基于卷积神经网络的SQL注入检测]] blog code
 
 使用word2vec来建立特征。

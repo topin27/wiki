@@ -1,3 +1,5 @@
+#+TITLE: Notes about Makefile
+
 * Cheat Sheet
 
 ** 优先连接静态库

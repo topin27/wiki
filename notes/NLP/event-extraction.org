@@ -1,3 +1,101 @@
-* TODO Event Extraction ppt
+#+TITLE: 事件抽取相关
 
-地址：[[http://faculty.cse.tamu.edu/huangrh/Fall17/l19_event-extraction.pdf]]
+* 事件抽取的分类
+
+可以将事件抽取分为两类：
+
+- 基于模式匹配的方法
+- 基于统计的方法
+  - 传统机器学习
+    - Pipeline: 将事件抽取任务转换多阶段的分类问题
+    - Joint Model
+      - Joint Inference:
+        基于集成学习的思路，将多个模型通过整体的优化目标整合起来
+      - Joint Modeling
+
+因此通常来说事件抽取分为以下几个子任务：
+
+- Trigger Identification
+- Trigger Type Classification
+- Argument Identification
+- Argument Role Classification
+
+Pipeline 类模型将这四个子任务分开处理，而 Joint Model 则同时处理这四个问题。
+
+** 基于模式匹配的方法
+
+基于人工编写的规则、语法树或者正则表达式。
+
+** 基于统计的方法
+
+*** 传统机器学习
+
+**** Pipeline
+
+将事件抽取任务转换为多个阶段的分类器：
+
+1. 事件触发词分类器
+2. 元素分类器（Argument Classifier）
+3. 元素角色分类器
+4. 属性分类器
+5. 可报告性分类器：判定是否存在值得报告的事件实例
+
+Pipeline 方式最大的问题是误差传递，无法处理全局的依赖关系。
+
+**** Joint Model
+
+分为 Joint Inference 和 Joint Modeling 两种。
+
+- Joint Inference:
+  使用集成学习的思路，将各个模型的结果通过整体的优化目标结合起来；
+- Joint Modeling:
+  将事件结构发作依存树，抽取任务转换成依存树预测问题，触发词识别和元素抽取同时完成，共享隐层特征，避免了误差传递，并且全局特征可以通过整体的结构中学习得到。
+
+*** 深度学习
+
+传统的机器学习方式，即使使用 Joint Model 来减少中间过程降低误差累积，但是还是不可避免的会依赖与依存分析、句法分析、词性标注等。因此基于深度学习方式在这方面有更好的优势：
+
+1. 减少外部 NLP 工具的依赖；
+2. 词向量作为输入，蕴含丰富的语义特征；
+3. 自动提取特征。
+
+**** Pipeline
+
+基于 Pipeline 的深度学习事件抽取一个典型的模型是 DMCNN。传统的 CNN 中的池化操作只能抽取出一个最大值，而在事件抽取领域，一个句子有可能会有多个事件，一个 argument 在不同的 trigger 下也扮演着不同的角色，而传统的池化操作只保留最重要的信息，因此 DMCNN 的一个改进是使用动态多池化卷积实现对一个句子的不同部分的最大值获取，保留多份有价值的信息。
+
+由于是 Pipeline 类的模型，因此 DMCNN 整体分为了两个阶段，第一个阶段是对触发词进行分类，如果存在触发词，则进入第二个阶段对元素进行分类。两个阶段都是使用 DMCNN。
+
+整个 Arguments Classifier 的结构又包括四个部分（顺序有先后）：
+
+1. 词向量转换
+2. Lexical-Level 词汇级别特征提取：Arguments/Trigger 及前后词的词向量
+3. Sentence-Level 句子级别特征提取，从以下几个方面提取特征：
+
+   - Content-word feature (CWF)
+   - Position Feature (PF)：当前词语与候选词之间的相对距离（向量表示）
+   - Event-type feature：当前 trigger 对应的事件类型特征最终得到的三个维度特征拼接作为卷积的输入，最后进入池化层。池化过程中根据 candidate argument 和 predicted trigger 将 feature map 分成三部分，分别对各部分进行最大池化。
+
+4. 将 Lexical-Level 特征和 Sentence-Level 特征拼接进入 softmax。
+
+Trigger Classifier 阶段：
+
+1. Lexical-Level：只使用触发词及其左右的词
+2. Sentence-Level: CWF+PF
+
+**** Joint Model
+
+基于 Joint Model 的深度学习事件抽取模型的典型代表是 JRNN。该模型词的特征向量由 Word Embedding + Entity Type Embedding + Dependency Tree Relation 三部分构成，同时预测 trigger 和 argument roles。
+
+* 语料
+
+** 利用外部资源
+
+基于 FrameNet。
+
+** 远程监督
+
+利用结构化的知识生成语料库。
+
+** 跨语料迁移
+
+利用现有的大量高质量英文语料辅助中文事件抽取。
